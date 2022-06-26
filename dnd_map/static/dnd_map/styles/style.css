@@ -8,3 +8,7 @@ img {
     display: inline-block;
     float: top;
 }
+
+th {
+    text-align: left;
+}

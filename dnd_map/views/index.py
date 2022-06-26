@@ -5,13 +5,14 @@ from django.shortcuts import render
 from PIL import Image
 from os import path
 
-from dnd_map.models import City, Kingdom
+from dnd_map.models import City, Kingdom, Place
+
+
+SITE_ROOT = path.dirname(path.realpath(__file__))
 
 
 def index(request):
-    SITE_ROOT = path.dirname(path.realpath(__file__))
-
-    config = json.load(open(SITE_ROOT + '/../../config.json'))
+    config = json.load(open(SITE_ROOT + '/../config.json'))
 
     is_map_set = config['main_map']['path'] != ''
 
@@ -27,6 +28,7 @@ def index(request):
         'map_original_width': original_width,
         'world_name': config['main_map']['world_name'],
         'map_path': '/dnd_map/images/maps/' + config['main_map']['path'],
+        'places': Place.objects.filter(discovered=True),
         'cities': City.objects.filter(discovered=True),
         'kingdoms': Kingdom.objects.filter(discovered=True)
     }
