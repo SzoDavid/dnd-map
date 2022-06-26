@@ -19,15 +19,21 @@ def kingdoms(request, kingdom):
         original_width = map_img.width
         map_img.close()
 
-    for city in kingdom_object.city_set.filter(discovered=True):
-        places_list = city.place_set.filter(discovered=True)
+    if request.user.is_authenticated:
+        cities_list = kingdom_object.city_set.all()
+        for city in cities_list:
+            places_list = city.place_set.all()
+    else:
+        cities_list = kingdom_object.city_set.filter(discovered=True)
+        for city in cities_list:
+            places_list = city.place_set.filter(discovered=True)
 
     context = {
         'kingdom': kingdom_object,
         'map_original_width': original_width,
         'capital': kingdom_object.city_set.get(capital=True),
-        'cities': kingdom_object.city_set.filter(discovered=True),
-        'places': places_list
+        'cities': cities_list,
+        'places': places_list,
     }
 
     return render(request, 'dnd_map/details/kingdom.html', context)
@@ -43,10 +49,15 @@ def cities(request, kingdom, city):
         original_width = map_img.width
         map_img.close()
 
+    if request.user.is_authenticated:
+        places_list = city_object.place_set.all()
+    else:
+        places_list = city_object.place_set.filter(discovered=True)
+
     context = {
         'city': city_object,
         'map_original_width': original_width,
-        'places': city_object.place_set.filter(discovered=True)
+        'places': places_list,
     }
 
     return render(request, 'dnd_map/details/city.html', context)
@@ -64,7 +75,7 @@ def places(request, kingdom, city, place):
 
     context = {
         'place': place_object,
-        'map_original_width': original_width
+        'map_original_width': original_width,
     }
 
     return render(request, 'dnd_map/details/place.html', context)
