@@ -19,7 +19,7 @@ A simple django app for creating interactive maps for your D&D campaign or anyth
 
 ## TODO's
 
-- [ ] Display information of places 
+- [X] Display information of places 
 - [ ] Admin interface
 - [ ] Add css
 - [ ] About page
