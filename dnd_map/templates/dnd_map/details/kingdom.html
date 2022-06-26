@@ -1,25 +1,22 @@
-<!DOCTYPE html>
+{% extends "dnd_map/base.html" %}
 {% load static %}
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
 
-    <link rel="stylesheet" href="{% static 'dnd_map/styles/style.css' %}">
+{% block title %}{{ kingdom.name }} | D&D IMV{% endblock %}
 
-    {% if kingdom.map_path %}
-    <script src="{% static 'dnd_map/scripts/mapResize.js' %}"></script>
-    <script>
-        window.onload = function () {
-            new ImageMap(document.getElementById('map'),
-                document.getElementById('img'),
-                parseInt("{{ map_original_width }}")).resize()
-        }
-    </script>
-    {% endif %}
+{% block scripts %}
+{% if is_map_set %}
+<script src="{% static 'dnd_map/scripts/mapResize.js' %}"></script>
+<script>
+    window.onload = function () {
+        new ImageMap(document.getElementById('map'),
+            document.getElementById('img'),
+            parseInt("{{ map_original_width }}")).resize()
+    }
+</script>
+{% endif %}
+{% endblock %}
 
-    <title>{{ kingdom.name }} | D&D IMV</title>
-</head>
-<body>
+{% block body %}
 <div id="information">
     <h1>{{ kingdom.name }}</h1>
     <table>
@@ -55,6 +52,7 @@
 <div id="map_view">
     <img id="img" src="{% static '/dnd_map/images/maps/' + kingdom.map_path %}" alt="Map of {{ kingdom.name }}" usemap="#map" width="100%">
 
+    <!-- TODO -->
     <map name="map"></map>
 </div>
 {% endif %}
@@ -74,5 +72,4 @@
     {% endfor %}
 </div>
 {% endif %}
-</body>
-</html>
+{% endblock %}

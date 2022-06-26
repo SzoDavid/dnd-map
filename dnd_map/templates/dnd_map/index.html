@@ -1,47 +1,45 @@
-<!DOCTYPE html>
+{% extends "dnd_map/base.html" %}
 {% load static %}
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="{% static 'dnd_map/styles/style.css' %}">
 
-    {% if is_map_set %}
-        <script src="{% static 'dnd_map/scripts/mapResize.js' %}"></script>
-        <script>
-            window.onload = function () {
-                new ImageMap(document.getElementById('map'),
-                    document.getElementById('img'),
-                    parseInt("{{ map_original_width }}")).resize()
-            }
-        </script>
-    {% endif %}
+{% block title %}{{ world_name }} | D&D IMV{% endblock %}
 
-    <title>{{ world_name }} | D&D IMV</title>
-</head>
-<body>
+{% block scripts %}
 {% if is_map_set %}
-    <div id="map_view">
-        <img id="img" src="{% static map_path %}" alt="Map of the world" usemap="#map" width="100%">
+<script src="{% static 'dnd_map/scripts/mapResize.js' %}"></script>
+<script>
+    window.onload = function () {
+        new ImageMap(document.getElementById('map'),
+            document.getElementById('img'),
+            parseInt("{{ map_original_width }}")).resize()
+    }
+</script>
+{% endif %}
+{% endblock %}
 
-        <map id="map" name="map">
-            {% for city in cities %}
-                <area shape="rect" coords="{{ city.coords }}" href="{% url 'cities' city.kingdom.name city.name %}"
-                      title="{{ city.name }}, {{ city.kingdom }}" alt="{{ city.name }}, {{ city.kingdom }}">
-            {% endfor%}
-            {% for kingdom in kingdoms %}
-                <area shape="rect" coords="{{ kingdom.coords }}" href="{% url 'kingdoms' kingdom.name %}"
-                      title="{{ kingdom.name }}" alt="{{ kingdom.name }}">
-            {% endfor%}
-        </map>
-    </div>
+{% block body %}
+{% if is_map_set %}
+<div id="map_view">
+    <img id="img" src="{% static map_path %}" alt="Map of the world" usemap="#map" width="100%">
+
+    <map id="map" name="map">
+        {% for city in cities %}
+        <area shape="rect" coords="{{ city.coords }}" href="{% url 'cities' city.kingdom.name city.name %}"
+              title="{{ city.name }}, {{ city.kingdom }}" alt="{{ city.name }}, {{ city.kingdom }}">
+        {% endfor%}
+        {% for kingdom in kingdoms %}
+        <area shape="rect" coords="{{ kingdom.coords }}" href="{% url 'kingdoms' kingdom.name %}"
+              title="{{ kingdom.name }}" alt="{{ kingdom.name }}">
+        {% endfor%}
+    </map>
+</div>
 {% endif %}
 <div id="list_view">
-{% for kingdom in kingdoms %}
+    {% for kingdom in kingdoms %}
     <div class="list_column">
         <h2><a href="{% url 'kingdoms' kingdom.name %}">{{ kingdom.name }}</a></h2>
         <ul>
-        {% for city in cities %}
-        {% if city.kingdom == kingdom %}
+            {% for city in cities %}
+            {% if city.kingdom == kingdom %}
             <li><a href="{% url 'cities' city.kingdom.name city.name %}">{{ city.name }}</a></li>
             <ul>
                 {% for place in places %}
@@ -50,11 +48,10 @@
                 {% endif %}
                 {% endfor %}
             </ul>
-        {% endif %}
-        {% endfor %}
+            {% endif %}
+            {% endfor %}
         </ul>
     </div>
-{% endfor %}
+    {% endfor %}
 </div>
-</body>
-</html>
+{% endblock %}

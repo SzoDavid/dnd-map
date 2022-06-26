@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="{% static 'dnd_map/styles/style.css' %}">
+
+  {% block scripts %}{% endblock %}
+
+  <title>{% block title %} D&D Interactive Map Viewer {% endblock %}</title>
+</head>
+<body>
+{% block body%}{% endblock %}
+</body>
+</html>
