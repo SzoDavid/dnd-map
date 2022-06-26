@@ -5,3 +5,6 @@ __pycache__
 db.sqlite3
 .idea
 manage.py
+dnd_map/migrations/*
+
+!dnd_map/migrations/__init__.py
