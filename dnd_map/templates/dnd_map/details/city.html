@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" href="{% static 'dnd_map/styles/style.css' %}">
+
+    {% if city.map_path %}
+    <script src="{% static 'dnd_map/scripts/mapResize.js' %}"></script>
+    <script>
+        window.onload = function () {
+            new ImageMap(document.getElementById('map'),
+                document.getElementById('img'),
+                parseInt("{{ map_original_width }}")).resize()
+        }
+    </script>
+    {% endif %}
+
+    <title>{{ city.name }}, {{ city.kingdom.name }} | D&D IMV</title>
+</head>
+<body>
+<div id="information">
+    <h1>{{ city.name }}</h1>
+    <table>
+        <tr>
+            <th>Name:</th>
+            <td>{{ city.name }}</td>
+        </tr>
+        {% if city.pronunciation %}
+        <tr>
+            <th>Pronunciation:</th>
+            <td>{{ city.pronunciation }}</td>
+        </tr>
+        {% endif%}
+        <tr>
+            <th>Kingdom:</th>
+            <td><a href="{% url 'kingdoms' city.kingdom.name %}">{{ city.kingdom.name }}</a></td>
+        </tr>
+        {% if city.type %}
+        <tr>
+            <th>Type:</th>
+            <td>{{ city.type }}</td>
+        </tr>
+        {% endif%}
+    </table>
+</div>
+{% if city.description %}
+<div id="description">
+    <h2>Description</h2>
+    <p>{{ city.description }}</p>
+</div>
+{% endif %}
+{% if city.map_path %}
+<div id="map_view">
+    <img id="img" src="{% static '/dnd_map/images/maps/' + city.map_path %}" alt="Map of {{ city.name }}" usemap="#map" width="100%">
+
+    <map name="map"></map>
+</div>
+{% endif %}
+<div id="list_view">
+    <h2>Places</h2>
+    <ul>
+        {% for place in places %}
+        <li><a href="{% url 'places' place.city.kingdom.name place.city.name place.name %}">{{ place.name }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+</body>
+</html>
