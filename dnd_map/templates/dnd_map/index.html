@@ -23,11 +23,11 @@
 
     <map id="map" name="map">
         {% for city in cities %}
-        <area shape="rect" coords="{{ city.coords }}" href="{% url 'cities' city.kingdom.name city.name %}"
+        <area shape="rect" coords="{{ city.coords }}" href="{% url 'dnd_map:cities' city.kingdom.name city.name %}"
               title="{{ city.name }}, {{ city.kingdom }}" alt="{{ city.name }}, {{ city.kingdom }}">
         {% endfor%}
         {% for kingdom in kingdoms %}
-        <area shape="rect" coords="{{ kingdom.coords }}" href="{% url 'kingdoms' kingdom.name %}"
+        <area shape="rect" coords="{{ kingdom.coords }}" href="{% url 'dnd_map:kingdoms' kingdom.name %}"
               title="{{ kingdom.name }}" alt="{{ kingdom.name }}">
         {% endfor%}
     </map>
@@ -36,15 +36,15 @@
 <div id="list_view">
     {% for kingdom in kingdoms %}
     <div class="list_column">
-        <h2><a href="{% url 'kingdoms' kingdom.name %}">{{ kingdom.name }}</a></h2>
+        <h2><a href="{% url 'dnd_map:kingdoms' kingdom.name %}">{{ kingdom.name }}</a></h2>
         <ul>
             {% for city in cities %}
             {% if city.kingdom == kingdom %}
-            <li><a href="{% url 'cities' city.kingdom.name city.name %}">{{ city.name }}</a></li>
+            <li><a href="{% url 'dnd_map:cities' city.kingdom.name city.name %}">{{ city.name }}</a></li>
             <ul>
                 {% for place in places %}
                 {% if place.city == city %}
-                <li><a href="{% url 'places' place.city.kingdom.name place.city.name place.name %}">{{ place.name }}</a></li>
+                <li><a href="{% url 'dnd_map:places' place.city.kingdom.name place.city.name place.name %}">{{ place.name }}</a></li>
                 {% endif %}
                 {% endfor %}
             </ul>

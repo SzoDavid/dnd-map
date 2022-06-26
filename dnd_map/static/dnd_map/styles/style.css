@@ -6,9 +6,12 @@ img {
 .list_column {
     vertical-align: top;
     display: inline-block;
-    float: top;
 }
 
 th {
     text-align: left;
+}
+
+#menu * {
+    display: inline-block;
 }

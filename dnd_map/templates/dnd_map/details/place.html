@@ -32,7 +32,7 @@
         {% endif%}
         <tr>
             <th>City:</th>
-            <td><a href="{% url 'cities' place.city.kingdom.name place.city.name %}">{{ place.city.name }}, {{ place.city.kingdom.name }}</a></td>
+            <td><a href="{% url 'dnd_map:cities' place.city.kingdom.name place.city.name %}">{{ place.city.name }}, {{ place.city.kingdom.name }}</a></td>
         </tr>
         {% if place.type %}
         <tr>

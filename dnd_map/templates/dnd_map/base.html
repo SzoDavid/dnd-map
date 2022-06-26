@@ -2,14 +2,22 @@
 {% load static %}
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="{% static 'dnd_map/styles/style.css' %}">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'dnd_map/styles/style.css' %}">
 
-  {% block scripts %}{% endblock %}
+    {% block scripts %}{% endblock %}
 
-  <title>{% block title %} D&D Interactive Map Viewer {% endblock %}</title>
+    <title>{% block title %}D&D Interactive Map Viewer{% endblock %}</title>
 </head>
 <body>
+<div id="menu">
+    <p>D&D Interactive Map Viewer</p>
+    {% if user.is_authenticated %}
+    <a href="{% url 'dnd_map:logout' %}">Logout</a>
+    {% else %}
+    <a href="{% url 'dnd_map:login' %}">Login</a>
+    {% endif %}
+</div>
 {% block body%}{% endblock %}
 </body>
 </html>
