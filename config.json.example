@@ -1,0 +1,7 @@
+{
+  "main_map": {
+    "_comment": "Put the path of the main map here relative to dnd_map/static/images/maps/. If you don't have a map, leave path empty, and the site will display the locations in a table only.",
+    "path": "",
+    "world_name": ""
+  }
+}
