@@ -12,6 +12,7 @@
 <body>
 <div id="menu">
     <a href="{% url 'dnd_map:index' %}">D&D Interactive Map Viewer</a>
+    <a href="{% url 'dnd_map:about' %}">About</a>
     {% if user.is_authenticated %}
     <a href="{% url 'dnd_map:logout' %}">Logout</a>
     {% else %}
