@@ -22,13 +22,23 @@
     <img id="img" src="{% static map_path %}" alt="Map of the world" usemap="#map" width="100%">
 
     <map id="map" name="map">
+        {% for place in places %}
+        {% if place.index_coords %}
+        <area shape="rect" coords="{{ place.index_coords }}" href="{% url 'dnd_map:places' place.city.kingdom.name place.city.name place.name %}"
+              title="{{ place.name}}, {{ place.city.name }}, {{ place.city.kingdom.name }}" alt="{{ place.name}}, {{ city.name }}, {{ city.kingdom }}">
+        {% endif %}
+        {% endfor%}
         {% for city in cities %}
-        <area shape="rect" coords="{{ city.coords }}" href="{% url 'dnd_map:cities' city.kingdom.name city.name %}"
-              title="{{ city.name }}, {{ city.kingdom }}" alt="{{ city.name }}, {{ city.kingdom }}">
+        {% if city.index_coords %}
+        <area shape="rect" coords="{{ city.index_coords }}" href="{% url 'dnd_map:cities' city.kingdom.name city.name %}"
+              title="{{ city.name }}, {{ city.kingdom.name }}" alt="{{ city.name }}, {{ city.kingdom.name }}">
+        {% endif %}
         {% endfor%}
         {% for kingdom in kingdoms %}
+        {% if kingdom.coords %}
         <area shape="rect" coords="{{ kingdom.coords }}" href="{% url 'dnd_map:kingdoms' kingdom.name %}"
               title="{{ kingdom.name }}" alt="{{ kingdom.name }}">
+        {% endif %}
         {% endfor%}
     </map>
 </div>

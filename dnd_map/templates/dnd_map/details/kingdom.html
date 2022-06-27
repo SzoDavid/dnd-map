@@ -60,8 +60,20 @@
 <div id="map_view">
     <img id="img" src="{{ kingdom.map.url }}" alt="Map of {{ kingdom.name }}" usemap="#map" width="100%">
 
-    <!-- TODO -->
-    <map name="map"></map>
+    <map name="map">
+        {% for place in places %}
+        {% if place.kingdom_coords %}
+        <area shape="rect" coords="{{ place.kingdom_coords }}" href="{% url 'dnd_map:places' place.city.kingdom.name place.city.name place.name %}"
+              title="{{ place.name}}, {{ place.city.name }}" alt="{{ place.name}}, {{ city.name }}">
+        {% endif %}
+        {% endfor%}
+        {% for city in cities %}
+        {% if city.kingdom_coords %}
+        <area shape="rect" coords="{{ city.kingdom_coords }}" href="{% url 'dnd_map:cities' city.kingdom.name city.name %}"
+              title="{{ city.name }}" alt="{{ city.name }}">
+        {% endif %}
+        {% endfor%}
+    </map>
 </div>
 {% endif %}
 {% if cities or user.is_authenticated%}

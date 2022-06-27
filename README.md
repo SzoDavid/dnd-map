@@ -5,7 +5,7 @@ Just fill up the database, and it will be ready!
 
 ## What can this project do?
 
-- Display maps with clickable regions, for your cities or else
+- Display maps with clickable regions, for your settlements
 - Display settlements in a table form
 - Store data of your settlements: kingdoms, cities, places:
   - Name
@@ -22,7 +22,10 @@ Just fill up the database, and it will be ready!
 
 - [X] Display information of places 
 - [X] Admin interface
+- [ ] Add geography features (links for forests, mountains, etc.)
+- [ ] Host multiple worlds
 - [ ] Add css
 - [ ] About page
 - [ ] Deploy project
 - [ ] Add world creation for users
+- [ ] Remove *kingdom/city/place* structure
