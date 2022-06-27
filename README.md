@@ -3,7 +3,7 @@
 A django app for creating interactive maps for your D&D campaign or anything else. 
 Just fill up the database, and it will be ready!
 
-## What *"can"* this project do?
+## What can this project do?
 
 - Display maps with clickable regions, for your cities or else
 - Display settlements in a table form
