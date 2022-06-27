@@ -20,7 +20,7 @@ Just fill up the database, and it will be ready!
 
 ## TODO's
 
-- [ ] Display information of places 
+- [X] Display information of places 
 - [X] Admin interface
 - [ ] Add css
 - [ ] About page
