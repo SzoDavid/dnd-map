@@ -23,7 +23,7 @@
                 <td>
                     <select id="kingdom" name="kingdom" required>
                         {% for kingdom in kingdoms %}
-                        <option value="{{ kingdom.pk }}">{{ kingdom.name }}</option>
+                        <option value="{{ kingdom.pk }}" {% if parent == kingdom.pk %}selected{% endif %}>{{ kingdom.name }}</option>
                         {% endfor %}
                     </select>
                     <a href="{% url 'dnd_map:new' 'kingdom' %}">Create new</a>
@@ -39,7 +39,7 @@
                 <td>
                     <select id="city" name="city" required>
                         {% for city in cities %}
-                        <option value="{{ city.pk }}">{{ city.name }}, {{ city.kingdom.name }}</option>
+                        <option value="{{ city.pk }}" {% if parent == city.pk %}selected{% endif %}>{{ city.name }}, {{ city.kingdom.name }}</option>
                         {% endfor %}
                     </select>
                     <a href="{% url 'dnd_map:new' 'city' %}">Create new</a>

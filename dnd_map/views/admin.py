@@ -55,6 +55,11 @@ def toggle_discovered(request, settlement_type, settlement_id):
 
 @login_required(login_url='/dnd/login/')
 def new(request, settlement_type):
+    return new_parent(request, settlement_type, -1)
+
+
+@login_required(login_url='/dnd/login/')
+def new_parent(request, settlement_type, parent_id):
     kingdoms = None
     cities = None
 
@@ -69,6 +74,7 @@ def new(request, settlement_type):
         'cities': cities,
         'mode': 'new',
         'return': request.META.get('HTTP_REFERER', '/'),
+        'parent': parent_id,
     }
 
     return render(request, 'dnd_map/admin/editor.html', context)

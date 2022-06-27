@@ -56,7 +56,6 @@
     <map name="map"></map>
 </div>
 {% endif %}
-{% if cities %}
 <div id="list_view">
     <h2>Cities</h2>
     {% for city in cities %}
@@ -80,9 +79,14 @@
             </li>
             {% endif %}
             {% endfor %}
+            <li>
+                <a href="{% url 'dnd_map:new_parent' 'place' city.pk %}">Add place</a>
+            </li>
         </ul>
     </div>
     {% endfor %}
+    <div class="list_column">
+        <a href="{% url 'dnd_map:new_parent' 'city' kingdom.pk %}">Add city</a>
+    </div>
 </div>
-{% endif %}
 {% endblock %}

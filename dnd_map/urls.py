@@ -15,6 +15,7 @@ urlpatterns = [
     path('<str:settlement_type>/<int:settlement_id>/remove', views.remove,
          name='remove'),
     path('<str:settlement_type>/new', views.new, name='new'),
+    path('<str:settlement_type>/new/<int:parent_id>', views.new_parent, name='new_parent'),
     path('<str:settlement_type>/<int:settlement_id>/edit', views.edit, name='edit'),
     path('updatedb', views.update_db, name='update_db'),
     path('<str:kingdom>', views.kingdoms, name='kingdoms'),

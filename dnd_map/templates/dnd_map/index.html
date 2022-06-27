@@ -66,11 +66,26 @@
                 </li>
                 {% endif %}
                 {% endfor %}
+                {% if user.is_authenticated %}
+                <li>
+                    <a href="{% url 'dnd_map:new_parent' 'place' city.pk %}">Add place</a>
+                </li>
+                {% endif %}
             </ul>
             {% endif %}
             {% endfor %}
+            {% if user.is_authenticated %}
+            <li>
+                <a href="{% url 'dnd_map:new_parent' 'city' kingdom.pk %}">Add city</a>
+            </li>
+            {% endif %}
         </ul>
     </div>
     {% endfor %}
+    {% if user.is_authenticated %}
+    <div class="list_column">
+        <a href="{% url 'dnd_map:new' 'kingdom' %}">Add kingdom</a>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}

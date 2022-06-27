@@ -56,7 +56,6 @@
     <map name="map"></map>
 </div>
 {% endif %}
-{% if places %}
 <div id="list_view">
     <h2>Places</h2>
     <ul>
@@ -70,7 +69,9 @@
             <a href="{% url 'dnd_map:places' place.city.kingdom.name place.city.name place.name %}"><i>{{ place.name }}</i></a>
         </li>
         {% endfor %}
+        <li>
+            <a href="{% url 'dnd_map:new_parent' 'place' city.pk %}">Add place</a>
+        </li>
     </ul>
 </div>
-{% endif%}
 {% endblock %}
