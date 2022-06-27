@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from dnd_map.models import Kingdom, City, Place
 
@@ -12,7 +13,7 @@ def kingdoms(request, kingdom):
     kingdom_object = get_object_or_404(Kingdom, name=kingdom)
 
     original_width = None
-    places_list = None
+    places_list = []
 
     if kingdom_object.map_path is not None:
         map_img = Image.open(SITE_ROOT + '/../../static/dnd_map/images/maps/' + kingdom_object.map_path)
@@ -22,11 +23,13 @@ def kingdoms(request, kingdom):
     if request.user.is_authenticated:
         cities_list = kingdom_object.city_set.all()
         for city in cities_list:
-            places_list = city.place_set.all()
+            for place in city.place_set.all():
+                places_list.append(place)
     else:
         cities_list = kingdom_object.city_set.filter(discovered=True)
         for city in cities_list:
-            places_list = city.place_set.filter(discovered=True)
+            for place in city.place_set.filter(discovered=True):
+                places_list.append(place)
 
     context = {
         'kingdom': kingdom_object,

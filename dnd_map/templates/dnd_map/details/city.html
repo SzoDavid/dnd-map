@@ -61,7 +61,14 @@
     <h2>Places</h2>
     <ul>
         {% for place in places %}
-        <li><a href="{% url 'dnd_map:places' place.city.kingdom.name place.city.name place.name %}">{{ place.name }}</a></li>
+        <li>
+            {% if user.is_authenticated %}
+            <a class="button {% if not place.discovered %}undiscovered{% endif %}" href="{% url 'dnd_map:switch_discovered' 'place' place.pk %}">
+                {% if place.discovered %} ✓ {% else %} ✗ {% endif %}
+            </a>
+            {% endif %}
+            <a href="{% url 'dnd_map:places' place.city.kingdom.name place.city.name place.name %}"><i>{{ place.name }}</i></a>
+        </li>
         {% endfor %}
     </ul>
 </div>

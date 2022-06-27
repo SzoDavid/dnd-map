@@ -36,15 +36,34 @@
 <div id="list_view">
     {% for kingdom in kingdoms %}
     <div class="list_column">
-        <h2><a href="{% url 'dnd_map:kingdoms' kingdom.name %}">{{ kingdom.name }}</a></h2>
+        {% if user.is_authenticated %}
+        <a class="button {% if not kingdom.discovered %}undiscovered{% endif %}" href="{% url 'dnd_map:switch_discovered' 'kingdom' kingdom.pk %}">
+            {% if kingdom.discovered %} ✓ {% else %} ✗ {% endif %}
+        </a>
+        {% endif %}
+        <a href="{% url 'dnd_map:kingdoms' kingdom.name %}"><b>{{ kingdom.name }}</b></a>
         <ul>
             {% for city in cities %}
             {% if city.kingdom == kingdom %}
-            <li><a href="{% url 'dnd_map:cities' city.kingdom.name city.name %}">{{ city.name }}</a></li>
+            <li>
+                {% if user.is_authenticated %}
+                <a class="button {% if not city.discovered %}undiscovered{% endif %}" href="{% url 'dnd_map:switch_discovered' 'city' city.pk %}">
+                    {% if city.discovered %} ✓ {% else %} ✗ {% endif %}
+                </a>
+                {% endif %}
+                <a href="{% url 'dnd_map:cities' city.kingdom.name city.name %}">{{ city.name }}</a>
+            </li>
             <ul>
                 {% for place in places %}
                 {% if place.city == city %}
-                <li><a href="{% url 'dnd_map:places' place.city.kingdom.name place.city.name place.name %}">{{ place.name }}</a></li>
+                <li>
+                    {% if user.is_authenticated %}
+                    <a class="button {% if not place.discovered %}undiscovered{% endif %}" href="{% url 'dnd_map:switch_discovered' 'place' place.pk %}">
+                        {% if place.discovered %} ✓ {% else %} ✗ {% endif %}
+                    </a>
+                    {% endif %}
+                    <a href="{% url 'dnd_map:places' place.city.kingdom.name place.city.name place.name %}"><i>{{ place.name }}</i></a>
+                </li>
                 {% endif %}
                 {% endfor %}
             </ul>
