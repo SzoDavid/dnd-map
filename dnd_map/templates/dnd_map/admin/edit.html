@@ -3,87 +3,15 @@
 {% block title %}Edit {{ settlement.name }} | D&D IMV{% endblock %}
 
 {% block body %}
-<form action="{% url 'dnd_map:update_db'  %}" method="post">
+<form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <fieldset>
         <legend><h1>Edit {{ settlement_type }}</h1></legend>
-        <p>* required</p>
-        <table>
-            <tr>
-                <th><label for="name">* Name:</label></th>
-                <td><input type="text" id="name" name="name" maxlength="64" value="{{ settlement.name }}" required></td>
-            </tr>
-            <tr>
-                <th><label for="pronunciation">Pronunciation:</label></th>
-                <td><input type="text" id="pronunciation" name="pronunciation" maxlength="64"
-                           {% if settlement.pronunciation %}value="{{ settlement.pronunciation }}"{% endif %}></td>
-            </tr>
-            {% if settlement_type == 'city' %}
-            <tr>
-                <th><label for="kingdom">* Kingdom:</label></th>
-                <td>
-                    <select id="kingdom" name="kingdom" required>
-                        {% for kingdom in kingdoms %}
-                        <option value="{{ kingdom.pk }}" {% if settlement.kingdom.pk == kingdom.pk %}selected{% endif %}>
-                            {{ kingdom.name }}
-                        </option>
-                        {% endfor %}
-                    </select>
-                    <a href="{% url 'dnd_map:new' 'kingdom' %}">Create new</a>
-                </td>
-            </tr>
-            <tr>
-                <th><label for="capital">Capital</label></th>
-                <td><input type="checkbox" id="capital" name="capital" {% if settlement.capital == True %} checked {% endif %}></td>
-            </tr>
-            {% elif settlement_type == 'place' %}
-            <tr>
-                <th><label for="city">* City:</label></th>
-                <td>
-                    <select id="city" name="city" required>
-                        {% for city in cities %}
-                        <option value="{{ city.pk }}" {% if settlement.city.pk == city.pk %}selected{% endif %}>
-                            {{ city.name }}, {{ city.kingdom.name }}
-                        </option>
-                        {% endfor %}
-                    </select>
-                    <a href="{% url 'dnd_map:new' 'city' %}">Create new</a>
-                </td>
-            </tr>
-            {% endif %}
-            {% if settlement_type != 'kingdom' %}
-            <tr>
-                <th><label for="type">Type:</label></th>
-                <td><input type="text" id="type" name="type" maxlength="64"
-                           {% if settlement.type %}value="{{ settlement.type }}"{% endif %}></td>
-            </tr>
-            {% endif %}
-            <tr>
-                <th><label for="description">Description:</label></th>
-                <td><textarea id="description" name="description" rows="5" cols="50">{% if settlement.description %}{{ settlement.description }}{% endif %}</textarea></td>
-            </tr>
-            <tr>
-                <th><label for="map_path">Map path:</label></th>
-                <td><input type="text" id="map_path" name="map_path" maxlength="32"
-                           {% if settlement.map_path %}value="{{ settlement.map_path }}"{% endif %}></td>
-            </tr>
-            <tr>
-                <th><label for="coords">Coords:</label></th>
-                <td><input type="text" id="coords" name="coords" maxlength="19"
-                           {% if settlement.coords %}value="{{ settlement.coords }}"{% endif %}></td>
-            </tr>
-            <tr>
-                <th><label for="discovered">Discovered</label></th>
-                <td><input type="checkbox" id="discovered" name="discovered" {% if settlement.discovered == True %} checked {% endif %}></td>
-            </tr>
-        </table>
-        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+        {{ form.as_p }}
     </fieldset>
     <label hidden>
-        <input name="mode" value="edit" hidden>
         <input name="return" value="{{ return }}" hidden>
-        <input name="settlement_type" value="{{ settlement_type }}" hidden>
-        <input name="pk" value="{{ settlement.pk }}" hidden>
+        <input name="path" {% if settlement_has_map %} value="{{ settlement.map.path }}"  {% endif %} hidden>
     </label>
     <a href="{% url 'dnd_map:remove' settlement_type settlement.pk return %}">Remove</a>
     <input type="reset" value="Clear">

@@ -14,7 +14,7 @@ def kingdoms(request, kingdom):
     original_width = None
     places_list = []
 
-    if kingdom_object.map is not None:
+    if bool(kingdom_object.map):
         map_img = Image.open(kingdom_object.map)
         original_width = map_img.width
         map_img.close()
@@ -46,7 +46,7 @@ def cities(request, kingdom, city):
 
     original_width = None
 
-    if city_object.map is not None:
+    if bool(city_object.map):
         map_img = Image.open(city_object.map)
         original_width = map_img.width
         map_img.close()
@@ -70,7 +70,7 @@ def places(request, kingdom, city, place):
 
     original_width = None
 
-    if place_object.map is not None:
+    if bool(place_object.map):
         map_img = Image.open(place_object.map)
         original_width = map_img.width
         map_img.close()
