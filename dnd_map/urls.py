@@ -11,6 +11,7 @@ urlpatterns = [
     path('login', auth_views.LoginView.as_view(template_name='dnd_map/admin/login.html', next_page='/dnd/',
                                                redirect_authenticated_user=True), name='login'),
     path('logout', views.logout_user, name='logout'),
+    path('terrain/<str:terrain>', views.terrains, name='terrains'),
     path('<str:settlement_type>/<int:settlement_id>/togglediscovered', views.toggle_discovered,
          name='switch_discovered'),
     path('<str:settlement_type>/<int:settlement_id>/remove/<path:redirect>', views.remove, name='remove'),

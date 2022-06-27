@@ -81,3 +81,7 @@ def places(request, kingdom, city, place):
     }
 
     return render(request, 'dnd_map/details/place.html', context)
+
+
+def terrains(request, terrain):
+    return
