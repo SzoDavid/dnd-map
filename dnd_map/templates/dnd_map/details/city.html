@@ -1,27 +1,32 @@
-<!DOCTYPE html>
+{% extends "dnd_map/base.html" %}
 {% load static %}
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
 
-    <link rel="stylesheet" href="{% static 'dnd_map/styles/style.css' %}">
+{% block title %}{{ city.name }}, {{ city.kingdom.name }} | D&D IMV{% endblock %}
 
-    {% if city.map_path %}
-    <script src="{% static 'dnd_map/scripts/mapResize.js' %}"></script>
-    <script>
-        window.onload = function () {
-            new ImageMap(document.getElementById('map'),
-                document.getElementById('img'),
-                parseInt("{{ map_original_width }}")).resize()
-        }
-    </script>
-    {% endif %}
+{% block scripts %}
+{% if is_map_set %}
+<script src="{% static 'dnd_map/scripts/mapResize.js' %}"></script>
+<script>
+    window.onload = function () {
+        new ImageMap(document.getElementById('map'),
+            document.getElementById('img'),
+            parseInt("{{ map_original_width }}")).resize()
+    }
+</script>
+{% endif %}
+{% endblock %}
 
-    <title>{{ city.name }}, {{ city.kingdom.name }} | D&D IMV</title>
-</head>
-<body>
+{% block body %}
 <div id="information">
-    <h1>{{ city.name }}</h1>
+    <h1>
+        {% if user.is_authenticated %}
+        <a class="toggle {% if not city.discovered %}off{% endif %}" href="{% url 'dnd_map:switch_discovered' 'city' city.pk %}">
+            {% if city.discovered %} ✓ {% else %} ✗ {% endif %}
+        </a>
+        <a class="button" href="{% url 'dnd_map:edit' 'city' city.pk %}">✎</a>
+        {% endif %}
+        {{ city.name }}
+    </h1>
     <table>
         <tr>
             <th>Name:</th>
@@ -35,7 +40,7 @@
         {% endif%}
         <tr>
             <th>Kingdom:</th>
-            <td><a href="{% url 'kingdoms' city.kingdom.name %}">{{ city.kingdom.name }}</a></td>
+            <td><a href="{% url 'dnd_map:kingdoms' city.kingdom.name %}">{{ city.kingdom.name }}</a></td>
         </tr>
         {% if city.type %}
         <tr>
@@ -51,20 +56,35 @@
     <p>{{ city.description }}</p>
 </div>
 {% endif %}
-{% if city.map_path %}
+{% if city.map %}
 <div id="map_view">
-    <img id="img" src="{% static '/dnd_map/images/maps/' + city.map_path %}" alt="Map of {{ city.name }}" usemap="#map" width="100%">
+    <img id="img" src="{{ city.map.url }}" alt="Map of {{ city.name }}" usemap="#map" width="100%">
 
+    <!-- TODO -->
     <map name="map"></map>
 </div>
 {% endif %}
+{% if places or user.is_authenticated %}
 <div id="list_view">
     <h2>Places</h2>
     <ul>
         {% for place in places %}
-        <li><a href="{% url 'places' place.city.kingdom.name place.city.name place.name %}">{{ place.name }}</a></li>
+        <li>
+            {% if user.is_authenticated %}
+            <a class="toggle {% if not place.discovered %}off{% endif %}" href="{% url 'dnd_map:switch_discovered' 'place' place.pk %}">
+                {% if place.discovered %} ✓ {% else %} ✗ {% endif %}
+            </a>
+            <a class="button" href="{% url 'dnd_map:edit' 'city' city.pk %}">✎</a>
+            {% endif %}
+            <a href="{% url 'dnd_map:places' place.city.kingdom.name place.city.name place.name %}"><i>{{ place.name }}</i></a>
+        </li>
         {% endfor %}
+        {% if user.is_authenticated %}
+        <li>
+            <a class="button" href="{% url 'dnd_map:new_parent' 'place' city.pk %}">+</a>
+        </li>
+        {% endif %}
     </ul>
 </div>
-</body>
-</html>
+{% endif %}
+{% endblock %}

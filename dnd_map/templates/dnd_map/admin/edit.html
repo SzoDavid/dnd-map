@@ -1,0 +1,20 @@
+{% extends "dnd_map/base.html" %}
+
+{% block title %}Edit {{ settlement.name }} | D&D IMV{% endblock %}
+
+{% block body %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <fieldset>
+        <legend><h1>Edit {{ settlement_type }}</h1></legend>
+        {{ form.as_p }}
+    </fieldset>
+    <label hidden>
+        <input name="return" value="{{ return }}" hidden>
+        <input name="path" {% if settlement_has_map %} value="{{ settlement.map.path }}"  {% endif %} hidden>
+    </label>
+    <a href="{% url 'dnd_map:remove' settlement_type settlement.pk return %}">Remove</a>
+    <input type="reset" value="Clear">
+    <input type="submit" value="Save">
+</form>
+{% endblock %}

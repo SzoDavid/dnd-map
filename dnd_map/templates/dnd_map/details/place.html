@@ -1,60 +1,64 @@
-<!DOCTYPE html>
+{% extends "dnd_map/base.html" %}
 {% load static %}
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
 
-  <link rel="stylesheet" href="{% static 'dnd_map/styles/style.css' %}">
+{% block title %}{{ place.name }}, {{ place.city.name }}, {{ place.city.kingdom.name }} | D&D IMV{% endblock %}
 
-  {% if place.map_path %}
-  <script src="{% static 'dnd_map/scripts/mapResize.js' %}"></script>
-  <script>
+{% block scripts %}
+{% if is_map_set %}
+<script src="{% static 'dnd_map/scripts/mapResize.js' %}"></script>
+<script>
     window.onload = function () {
-      new ImageMap(document.getElementById('map'),
-              document.getElementById('img'),
-              parseInt("{{ map_original_width }}")).resize()
+        new ImageMap(document.getElementById('map'),
+            document.getElementById('img'),
+            parseInt("{{ map_original_width }}")).resize()
     }
-  </script>
-  {% endif %}
+</script>
+{% endif %}
+{% endblock %}
 
-  <title>{{ place.name }}, {{ place.city.name }}, {{ place.city.kingdom.name }} | D&D IMV</title>
-</head>
-<body>
+{% block body %}
 <div id="information">
-  <h1>{{ place.name }}</h1>
-  <table>
-    <tr>
-      <th>Name:</th>
-      <td>{{ place.name }}</td>
-    </tr>
-    {% if place.pronunciation %}
-    <tr>
-      <th>Pronunciation:</th>
-      <td>{{ place.pronunciation }}</td>
-    </tr>
-    {% endif%}
-    <tr>
-      <th>City:</th>
-      <td><a href="{% url 'cities' place.city.kingdom.name place.city.name %}">{{ place.city.name }}, {{ place.city.kingdom.name }}</a></td>
-    </tr>
-    {% if place.type %}
-    <tr>
-      <th>Type:</th>
-      <td>{{ place.type }}</td>
-    </tr>
-    {% endif%}
-  </table>
+    <h1>
+        {% if user.is_authenticated %}
+        <a class="toggle {% if not city.discovered %}off{% endif %}" href="{% url 'dnd_map:switch_discovered' 'place' place.pk %}">
+            {% if city.discovered %} ✓ {% else %} ✗ {% endif %}
+        </a>
+        <a class="button" href="{% url 'dnd_map:edit' 'place' place.pk %}">✎</a>
+        {% endif %}
+        {{ place.name }}
+    </h1>
+    <table>
+        <tr>
+            <th>Name:</th>
+            <td>{{ place.name }}</td>
+        </tr>
+        {% if place.pronunciation %}
+        <tr>
+            <th>Pronunciation:</th>
+            <td>{{ place.pronunciation }}</td>
+        </tr>
+        {% endif%}
+        <tr>
+            <th>City:</th>
+            <td><a href="{% url 'dnd_map:cities' place.city.kingdom.name place.city.name %}">{{ place.city.name }}, {{ place.city.kingdom.name }}</a></td>
+        </tr>
+        {% if place.type %}
+        <tr>
+            <th>Type:</th>
+            <td>{{ place.type }}</td>
+        </tr>
+        {% endif%}
+    </table>
 </div>
 {% if place.description %}
 <div id="description">
-  <h2>Description</h2>
-  <p>{{ place.description }}</p>
+    <h2>Description</h2>
+    <p>{{ place.description }}</p>
 </div>
 {% endif %}
-{% if place.map_path %}
+{% if place.map %}
 <div id="map_view">
-  <img id="img" src="{% static '/dnd_map/images/maps/' + place.map_path %}" alt="Map of {{ place.name }}" width="100%">
+    <img id="img" src="{{ place.map.url }}" alt="Map of {{ place.name }}" width="100%">
 </div>
 {% endif %}
-</body>
-</html>
+{% endblock %}

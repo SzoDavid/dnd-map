@@ -1,27 +1,32 @@
-<!DOCTYPE html>
+{% extends "dnd_map/base.html" %}
 {% load static %}
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
 
-    <link rel="stylesheet" href="{% static 'dnd_map/styles/style.css' %}">
+{% block title %}{{ kingdom.name }} | D&D IMV{% endblock %}
 
-    {% if kingdom.map_path %}
-    <script src="{% static 'dnd_map/scripts/mapResize.js' %}"></script>
-    <script>
-        window.onload = function () {
-            new ImageMap(document.getElementById('map'),
-                document.getElementById('img'),
-                parseInt("{{ map_original_width }}")).resize()
-        }
-    </script>
-    {% endif %}
+{% block scripts %}
+{% if is_map_set %}
+<script src="{% static 'dnd_map/scripts/mapResize.js' %}"></script>
+<script>
+    window.onload = function () {
+        new ImageMap(document.getElementById('map'),
+            document.getElementById('img'),
+            parseInt("{{ map_original_width }}")).resize()
+    }
+</script>
+{% endif %}
+{% endblock %}
 
-    <title>{{ kingdom.name }} | D&D IMV</title>
-</head>
-<body>
+{% block body %}
 <div id="information">
-    <h1>{{ kingdom.name }}</h1>
+    <h1>
+        {% if user.is_authenticated %}
+        <a class="toggle {% if not kingdom.discovered %}off{% endif %}" href="{% url 'dnd_map:switch_discovered' 'kingdom' kingdom.pk %}">
+            {% if kingdom.discovered %} ✓ {% else %} ✗ {% endif %}
+        </a>
+        <a class="button" href="{% url 'dnd_map:edit' 'kingdom' kingdom.pk %}">✎</a>
+        {% endif %}
+        {{ kingdom.name }}
+    </h1>
     <table>
         <tr>
             <th>Name:</th>
@@ -35,7 +40,7 @@
         {% endif%}
         <tr>
             <th>Capital:</th>
-            <td><a href="{% url 'cities' capital.kingdom.name capital.name %}">{{ capital.name }}</a></td>
+            <td><a href="{% url 'dnd_map:cities' capital.kingdom.name capital.name %}">{{ capital.name }}</a></td>
         </tr>
         {% if kingdom.type %}
         <tr>
@@ -51,28 +56,53 @@
     <p>{{ kingdom.description }}</p>
 </div>
 {% endif %}
-{% if kingdom.map_path %}
+{% if kingdom.map %}
 <div id="map_view">
-    <img id="img" src="{% static '/dnd_map/images/maps/' + kingdom.map_path %}" alt="Map of {{ kingdom.name }}" usemap="#map" width="100%">
+    <img id="img" src="{{ kingdom.map.url }}" alt="Map of {{ kingdom.name }}" usemap="#map" width="100%">
 
+    <!-- TODO -->
     <map name="map"></map>
 </div>
 {% endif %}
-{% if places %}
+{% if cities or user.is_authenticated%}
 <div id="list_view">
+    <h2>Cities</h2>
     {% for city in cities %}
     <div class="list_column">
-        <h2><a href="{% url 'cities' city.kingdom.name city.name %}">{{ city.name }}</a></h2>
+        {% if user.is_authenticated %}
+        <a class="toggle {% if not city.discovered %}off{% endif %}" href="{% url 'dnd_map:switch_discovered' 'city' city.pk %}">
+            {% if city.discovered %} ✓ {% else %} ✗ {% endif %}
+        </a>
+        <a class="button" href="{% url 'dnd_map:edit' 'city' city.pk %}">✎</a>
+        {% endif %}
+        <a href="{% url 'dnd_map:cities' city.kingdom.name city.name %}">{{ city.name }}</a>
         <ul>
             {% for place in places %}
             {% if place.city == city %}
-            <li><a href="{% url 'places' place.city.kingdom.name place.city.name place.name %}">{{ place.name }}</a></li>
+            <li>
+                {% if user.is_authenticated %}
+                <a class="toggle {% if not place.discovered %}off{% endif %}" href="{% url 'dnd_map:switch_discovered' 'place' place.pk %}">
+                    {% if place.discovered %} ✓ {% else %} ✗ {% endif %}
+                </a>
+                <a class="button" href="{% url 'dnd_map:edit' 'place' place.pk %}">✎</a>
+                {% endif %}
+                <a href="{% url 'dnd_map:places' place.city.kingdom.name place.city.name place.name %}"><i>{{ place.name }}</i></a>
+            </li>
             {% endif %}
             {% endfor %}
+            {% if user.is_authenticated %}
+            <li>
+                <a class="button" href="{% url 'dnd_map:new_parent' 'place' city.pk %}">+</a>
+            </li>
+            {% endif %}
         </ul>
     </div>
     {% endfor %}
+    {% if user.is_authenticated %}
+    <div class="list_column">
+        <a class="button" href="{% url 'dnd_map:new_parent' 'city' kingdom.pk %}">+</a>
+    </div>
+    {% endif %}
 </div>
 {% endif %}
-</body>
-</html>
+{% endblock %}

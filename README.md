@@ -1,12 +1,13 @@
 # D&D Interactive Map Viewer
 
-A simple django app for creating interactive maps for your D&D campaign or anything else. Just fill up the database and it will be done!
+A django app for creating interactive maps for your D&D campaign or anything else. 
+Just fill up the database, and it will be ready!
 
 ## What *"can"* this project do?
 
 - Display maps with clickable regions, for your cities or else
-- Display places even if there are no maps
-- Store data of your kingdoms, cities, places:
+- Display settlements in a table form
+- Store data of your settlements: kingdoms, cities, places:
   - Name
   - Pronunciation (optional)
   - Parent (Ex: the kingdom the city is in)
@@ -14,13 +15,13 @@ A simple django app for creating interactive maps for your D&D campaign or anyth
   - Description (optional)
   - Map (optional)
   - Coordinates (Define a rectangle using pixel coordinates where this place is located on the parent map, optional)
-  - Is it discovered (Makes you able to disallow people to veiw places that were not yet discovered)
- - Set places' discovered state in an admin page
+  - Is it discovered (Makes you able to disallow people to view places that were not yet discovered)
+ - Admin interface for adding, editing, removing settlements, and toggle buttons for quickly changing discovered state
 
 ## TODO's
 
 - [X] Display information of places 
-- [ ] Admin interface
+- [X] Admin interface
 - [ ] Add css
 - [ ] About page
 - [ ] Deploy project
