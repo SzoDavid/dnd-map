@@ -57,8 +57,8 @@
                 <td><textarea id="description" name="description" rows="5" cols="50"></textarea></td>
             </tr>
             <tr>
-                <th><label for="map_path">Map path:</label></th>
-                <td><input type="text" id="map_path" name="map_path" maxlength="32"></td>
+                <th><label for="map">Map:</label></th>
+                <td><input type="file" id="map" name="map" accept="image/*"></td>
             </tr>
             <tr>
                 <th><label for="coords">Coords:</label></th>
@@ -72,10 +72,9 @@
         {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
     </fieldset>
     <label hidden>
-        <input name="mode" value="{{ mode }}" hidden>
+        <input name="mode" value="new" hidden>
         <input name="return" value="{{ return }}" hidden>
         <input name="settlement_type" value="{{ settlement_type }}" hidden>
-        <input name="id" value="" hidden>
     </label>
     <input type="reset" value="Clear">
     <input type="submit" value="Save">

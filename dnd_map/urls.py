@@ -12,7 +12,7 @@ urlpatterns = [
     path('logout', views.logout_user, name='logout'),
     path('<str:settlement_type>/<int:settlement_id>/togglediscovered', views.toggle_discovered,
          name='switch_discovered'),
-    path('<str:settlement_type>/<int:settlement_id>/remove', views.remove,
+    path('<str:settlement_type>/<int:settlement_id>/remove/<path:redirect>', views.remove,
          name='remove'),
     path('<str:settlement_type>/new', views.new, name='new'),
     path('<str:settlement_type>/new/<int:parent_id>', views.new_parent, name='new_parent'),

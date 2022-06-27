@@ -1,4 +1,3 @@
-from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from dnd_map.models import Kingdom, City, Place
 
@@ -15,8 +14,8 @@ def kingdoms(request, kingdom):
     original_width = None
     places_list = []
 
-    if kingdom_object.map_path is not None:
-        map_img = Image.open(SITE_ROOT + '/../../static/dnd_map/images/maps/' + kingdom_object.map_path)
+    if kingdom_object.map is not None:
+        map_img = Image.open(kingdom_object.map)
         original_width = map_img.width
         map_img.close()
 
@@ -47,8 +46,8 @@ def cities(request, kingdom, city):
 
     original_width = None
 
-    if city_object.map_path is not None:
-        map_img = Image.open(SITE_ROOT + '/../../static/dnd_map/images/maps/' + city_object.map_path)
+    if city_object.map is not None:
+        map_img = Image.open(city_object.map)
         original_width = map_img.width
         map_img.close()
 
@@ -71,8 +70,8 @@ def places(request, kingdom, city, place):
 
     original_width = None
 
-    if place_object.map_path is not None:
-        map_img = Image.open(SITE_ROOT + '/../../static/dnd_map/images/maps/' + place_object.map_path)
+    if place_object.map is not None:
+        map_img = Image.open(place_object.map)
         original_width = map_img.width
         map_img.close()
 

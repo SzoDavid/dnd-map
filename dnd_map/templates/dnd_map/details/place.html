@@ -18,7 +18,15 @@
 
 {% block body %}
 <div id="information">
-    <h1>{{ place.name }}</h1>
+    <h1>
+        {% if user.is_authenticated %}
+        <a class="toggle {% if not city.discovered %}off{% endif %}" href="{% url 'dnd_map:switch_discovered' 'place' place.pk %}">
+            {% if city.discovered %} ✓ {% else %} ✗ {% endif %}
+        </a>
+        <a class="button" href="{% url 'dnd_map:edit' 'place' place.pk %}">✎</a>
+        {% endif %}
+        {{ place.name }}
+    </h1>
     <table>
         <tr>
             <th>Name:</th>
@@ -48,9 +56,9 @@
     <p>{{ place.description }}</p>
 </div>
 {% endif %}
-{% if place.map_path %}
+{% if place.map %}
 <div id="map_view">
-    <img id="img" src="{% static '/dnd_map/images/maps/' + place.map_path %}" alt="Map of {{ place.name }}" width="100%">
+    <img id="img" src="{{ place.map.url }}" alt="Map of {{ place.name }}" width="100%">
 </div>
 {% endif %}
 {% endblock %}

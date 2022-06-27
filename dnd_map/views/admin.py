@@ -43,7 +43,6 @@ def toggle_discovered(request, settlement_type, settlement_id):
                     place.discovered = False
                     place.save()
         elif settlement_type == 'city':
-            settlement_object = get_object_or_404(City, pk=settlement_id)
             for place in settlement_object.place_set.filter(discovered=True):
                 place.discovered = False
                 place.save()
@@ -72,25 +71,45 @@ def new_parent(request, settlement_type, parent_id):
         'settlement_type': settlement_type,
         'kingdoms': kingdoms,
         'cities': cities,
-        'mode': 'new',
         'return': request.META.get('HTTP_REFERER', '/'),
         'parent': parent_id,
     }
 
-    return render(request, 'dnd_map/admin/editor.html', context)
+    return render(request, 'dnd_map/admin/new.html', context)
 
 
 @login_required(login_url='/dnd/login/')
 def edit(request, settlement_type, settlement_id):
-    return
+    kingdoms = None
+    cities = None
+
+    if settlement_type == 'city':
+        settlement = get_object_or_404(City, pk=settlement_id)
+        kingdoms = Kingdom.objects.all()
+    elif settlement_type == 'place':
+        settlement = get_object_or_404(Place, pk=settlement_id)
+        cities = City.objects.all()
+    else:
+        settlement = get_object_or_404(Kingdom, pk=settlement_id)
+
+    context = {
+        'settlement_type': settlement_type,
+        'settlement': settlement,
+        'kingdoms': kingdoms,
+        'cities': cities,
+        'return': request.META.get('HTTP_REFERER', '/'),
+    }
+
+    return render(request, 'dnd_map/admin/edit.html', context)
 
 
 @login_required(login_url='/dnd/login/')
 def update_db(request):
-    if request.POST['map_path'].strip() == '':
+
+    if request.POST['map'].strip() == '':
         map_path = None
     else:
-        map_path = request.POST['map_path'].strip()
+        map_path = request.POST['map'].strip()
 
     if request.POST['mode'] == 'new':
         if request.POST['settlement_type'] == 'kingdom':
@@ -98,7 +117,7 @@ def update_db(request):
                 name=request.POST['name'].strip(),
                 pronunciation=request.POST['pronunciation'].strip(),
                 description=request.POST['description'].strip(),
-                map_path=map_path,
+                map__url=map_path,
                 coords=request.POST['coords'].strip(),
                 discovered='discovered' in request.POST
             ).save()
@@ -109,7 +128,7 @@ def update_db(request):
                 kingdom=Kingdom.objects.get(pk=request.POST['kingdom']),
                 type=request.POST['type'].strip(),
                 description=request.POST['description'].strip(),
-                map_path=map_path,
+                map__url=map_path,
                 coords=request.POST['coords'].strip(),
                 discovered='discovered' in request.POST,
                 capital='capital' in request.POST
@@ -121,14 +140,43 @@ def update_db(request):
                 city=City.objects.get(pk=request.POST['city']),
                 type=request.POST['type'].strip(),
                 description=request.POST['description'].strip(),
-                map_path=map_path,
+                map__url=map_path,
                 coords=request.POST['coords'].strip(),
                 discovered='discovered' in request.POST
             ).save()
+    else:
+        if request.POST['settlement_type'] == 'kingdom':
+            settlement = get_object_or_404(Kingdom, pk=request.POST['pk'])
+        elif request.POST['settlement_type'] == 'city':
+            settlement = get_object_or_404(City, pk=request.POST['pk'])
+            settlement.kingdom = Kingdom.objects.get(pk=request.POST['kingdom'])
+            settlement.type = request.POST['type'].strip()
+            settlement.capital = 'capital' in request.POST
+        else:
+            settlement = get_object_or_404(Place, pk=request.POST['pk'])
+            settlement.city = City.objects.get(pk=request.POST['city'])
+            settlement.type = request.POST['type'].strip()
+
+        settlement.name = request.POST['name'].strip()
+        settlement.pronunciation = request.POST['pronunciation'].strip()
+        settlement.description = request.POST['description'].strip()
+        settlement.map = map_path
+        settlement.coords = request.POST['coords'].strip()
+        settlement.discovered = 'discovered' in request.POST
+        settlement.save()
 
     return HttpResponseRedirect(request.POST['return'])
 
 
 @login_required(login_url='/dnd/login/')
-def remove(request, settlement_id):
-    return
+def remove(request, settlement_type, settlement_id, redirect):
+    if settlement_type == 'kingdom':
+        settlement = get_object_or_404(Kingdom, pk=settlement_id)
+    elif settlement_type == 'city':
+        settlement = get_object_or_404(City, pk=settlement_id)
+    else:
+        settlement = get_object_or_404(Place, pk=settlement_id)
+
+    settlement.delete()
+
+    return HttpResponseRedirect(redirect)
