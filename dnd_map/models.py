@@ -46,3 +46,18 @@ class Place(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Terrain(models.Model):
+    name = models.CharField(max_length=64)
+    pronunciation = models.CharField(max_length=64, blank=True, null=True)
+    type = models.CharField(max_length=64, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    show_description = models.BooleanField(default=False)
+    index_coords = models.CharField(max_length=19, blank=True, null=True)
+    kingdom_coords = models.CharField(max_length=19, blank=True, null=True)
+    city_coords = models.CharField(max_length=19, blank=True, null=True)
+    place_coords = models.CharField(max_length=19, blank=True, null=True)
+
+    def __str__(self):
+        return self.name
