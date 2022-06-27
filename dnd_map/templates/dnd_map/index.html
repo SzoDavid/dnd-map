@@ -41,7 +41,7 @@
             {% if kingdom.discovered %} ✓ {% else %} ✗ {% endif %}
         </a>
         {% endif %}
-        <a href="{% url 'dnd_map:kingdoms' kingdom.name %}"><b>{{ kingdom.name }}</b></a>
+        <a href="{% url 'dnd_map:kingdoms' kingdom.name %}"><strong>{{ kingdom.name }}</strong></a>
         <ul>
             {% for city in cities %}
             {% if city.kingdom == kingdom %}
