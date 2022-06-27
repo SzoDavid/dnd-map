@@ -42,4 +42,8 @@ def index(request):
         'kingdoms': kingdoms_list,
     }
 
-    return render(request, 'dnd_map/index.html/', context)
+    return render(request, 'dnd_map/index/index.html/', context)
+
+
+def about(request):
+    return render(request, 'dnd_map/index/about.html/')

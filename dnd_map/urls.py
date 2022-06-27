@@ -7,6 +7,7 @@ from . import views
 app_name = 'dnd_map'
 urlpatterns = [
     path('', views.index, name='index'),
+    path('about', views.about, name='about'),
     path('login', auth_views.LoginView.as_view(template_name='dnd_map/admin/login.html', next_page='/dnd/',
                                                redirect_authenticated_user=True), name='login'),
     path('logout', views.logout_user, name='logout'),

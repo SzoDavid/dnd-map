@@ -25,7 +25,7 @@ Just fill up the database, and it will be ready!
 - [ ] Add geography features (links for forests, mountains, etc.)
 - [ ] Host multiple worlds
 - [ ] Add css
-- [ ] About page
+- [X] About page
 - [ ] Deploy project
 - [ ] Add world creation for users
 - [ ] Remove *kingdom/city/place* structure
