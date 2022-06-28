@@ -36,11 +36,11 @@ ul {
     margin-bottom: 20px;
 }
 
-#models div {
+#model_fields div {
     margin-bottom: 40px;
 }
 
-#models div p,h4 {
+#model_fields div p,h4 {
     margin-left: 40px;
 }
 
