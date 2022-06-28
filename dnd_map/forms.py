@@ -1,27 +1,33 @@
 from django import forms
 
-from dnd_map.models import Kingdom, City, Place
+from dnd_map.models import Kingdom, City, Place, Terrain, TerrainCoords
 
 
 class KingdomForm(forms.ModelForm):
     class Meta:
-        # To specify the model to be used to create form
         model = Kingdom
-        # It includes all the fields of model
         fields = '__all__'
 
 
 class CityForm(forms.ModelForm):
     class Meta:
-        # To specify the model to be used to create form
         model = City
-        # It includes all the fields of model
         fields = '__all__'
 
 
 class PlaceForm(forms.ModelForm):
     class Meta:
-        # To specify the model to be used to create form
         model = Place
-        # It includes all the fields of model
+        fields = '__all__'
+
+
+class TerrainForm(forms.ModelForm):
+    class Meta:
+        model = Terrain
+        fields = '__all__'
+
+
+class TerrainCoordsForm(forms.ModelForm):
+    class Meta:
+        model = TerrainCoords
         fields = '__all__'

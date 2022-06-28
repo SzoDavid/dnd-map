@@ -20,7 +20,7 @@
 <div id="information">
     <h1>
         {% if user.is_authenticated %}
-        <a class="toggle {% if not kingdom.discovered %}off{% endif %}" href="{% url 'dnd_map:switch_discovered' 'kingdom' kingdom.pk %}">
+        <a class="toggle {% if not kingdom.discovered %}off{% endif %}" href="{% url 'dnd_map:toggle_discovered' 'kingdom' kingdom.pk %}">
             {% if kingdom.discovered %} ✓ {% else %} ✗ {% endif %}
         </a>
         <a class="button" href="{% url 'dnd_map:edit' 'kingdom' kingdom.pk %}">✎</a>
@@ -73,48 +73,77 @@
               title="{{ city.name }}" alt="{{ city.name }}">
         {% endif %}
         {% endfor%}
+        {% for terrain_coord in terrain_coords %}
+        <area shape="rect" coords="{{ terrain_coord.coords }}" href="{% url 'dnd_map:terrains' terrain_coord.terrain.name %}"
+              title="{{ terrain_coord.terrain.name }}" alt="{{ terrain_coord.terrain.name }}">
+        {% endfor%}
     </map>
 </div>
 {% endif %}
-{% if cities or user.is_authenticated%}
 <div id="list_view">
-    <h2>Cities</h2>
-    {% for city in cities %}
+    {% if cities or user.is_authenticated%}
     <div class="list_column">
+        <h2>Cities</h2>
+        {% for city in cities %}
+        <div class="list_column">
+            {% if user.is_authenticated %}
+            <a class="toggle {% if not city.discovered %}off{% endif %}" href="{% url 'dnd_map:toggle_discovered' 'city' city.pk %}">
+                {% if city.discovered %} ✓ {% else %} ✗ {% endif %}
+            </a>
+            <a class="button" href="{% url 'dnd_map:edit' 'city' city.pk %}">✎</a>
+            {% endif %}
+            <a href="{% url 'dnd_map:cities' city.kingdom.name city.name %}">{{ city.name }}</a>
+            <ul>
+                {% for place in places %}
+                {% if place.city == city %}
+                <li>
+                    {% if user.is_authenticated %}
+                    <a class="toggle {% if not place.discovered %}off{% endif %}" href="{% url 'dnd_map:toggle_discovered' 'place' place.pk %}">
+                        {% if place.discovered %} ✓ {% else %} ✗ {% endif %}
+                    </a>
+                    <a class="button" href="{% url 'dnd_map:edit' 'place' place.pk %}">✎</a>
+                    {% endif %}
+                    <a href="{% url 'dnd_map:places' place.city.kingdom.name place.city.name place.name %}"><i>{{ place.name }}</i></a>
+                </li>
+                {% endif %}
+                {% endfor %}
+                {% if user.is_authenticated %}
+                <li>
+                    <a class="button" href="{% url 'dnd_map:new' 'place' city.pk %}">+</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+        {% endfor %}
         {% if user.is_authenticated %}
-        <a class="toggle {% if not city.discovered %}off{% endif %}" href="{% url 'dnd_map:switch_discovered' 'city' city.pk %}">
-            {% if city.discovered %} ✓ {% else %} ✗ {% endif %}
-        </a>
-        <a class="button" href="{% url 'dnd_map:edit' 'city' city.pk %}">✎</a>
+        <div class="list_column">
+            <a class="button" href="{% url 'dnd_map:new' 'city' kingdom.pk %}">+</a>
+        </div>
         {% endif %}
-        <a href="{% url 'dnd_map:cities' city.kingdom.name city.name %}">{{ city.name }}</a>
+    </div>
+    {% endif %}
+    {% if terrain_coords %}
+    <div class="list_column">
+        <h2>Terrain</h2>
         <ul>
-            {% for place in places %}
-            {% if place.city == city %}
+            {% for terrain_coord in terrain_coords %}
             <li>
                 {% if user.is_authenticated %}
-                <a class="toggle {% if not place.discovered %}off{% endif %}" href="{% url 'dnd_map:switch_discovered' 'place' place.pk %}">
-                    {% if place.discovered %} ✓ {% else %} ✗ {% endif %}
+                <a class="toggle {% if not terrain_coord.terrain.show_description %}off{% endif %}" href="{% url 'dnd_map:toggle_discovered' 'terrain' terrain_coord.terrain.pk %}">
+                    {% if terrain_coord.terrain.show_description %} ✓ {% else %} ✗ {% endif %}
                 </a>
-                <a class="button" href="{% url 'dnd_map:edit' 'place' place.pk %}">✎</a>
+                <a class="button" href="{% url 'dnd_map:edit' 'terrain' terrain_coord.terrain.pk %}">✎</a>
                 {% endif %}
-                <a href="{% url 'dnd_map:places' place.city.kingdom.name place.city.name place.name %}"><i>{{ place.name }}</i></a>
+                <a href="{% url 'dnd_map:terrains' terrain_coord.terrain.name %}">{{ terrain_coord.terrain.name }}</a>
             </li>
-            {% endif %}
-            {% endfor %}
+            {% endfor%}
             {% if user.is_authenticated %}
             <li>
-                <a class="button" href="{% url 'dnd_map:new_parent' 'place' city.pk %}">+</a>
+                <a class="button" href="{% url 'dnd_map:new' 'terrain' %}">+</a>
             </li>
             {% endif %}
         </ul>
     </div>
-    {% endfor %}
-    {% if user.is_authenticated %}
-    <div class="list_column">
-        <a class="button" href="{% url 'dnd_map:new_parent' 'city' kingdom.pk %}">+</a>
-    </div>
     {% endif %}
 </div>
-{% endif %}
 {% endblock %}

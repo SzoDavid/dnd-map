@@ -34,11 +34,9 @@
               title="{{ city.name }}, {{ city.kingdom.name }}" alt="{{ city.name }}, {{ city.kingdom.name }}">
         {% endif %}
         {% endfor%}
-        {% for terrain in terrains %}
-        {% if terrain.index_coords %}
-        <area shape="rect" coords="{{ terrain.index_coords }}" href="{% url 'dnd_map:terrains' terrain.name %}"
-              title="{{ terrain.name }}" alt="{{ terrain.name }}">
-        {% endif %}
+        {% for terrain_coord in terrain_coords %}
+        <area shape="rect" coords="{{ terrain_coord.coords }}" href="{% url 'dnd_map:terrains' terrain_coord.terrain.name %}"
+              title="{{ terrain_coord.terrain.name }}" alt="{{ terrain_coord.terrain.name }}">
         {% endfor%}
         {% for kingdom in kingdoms %}
         {% if kingdom.coords %}
@@ -55,7 +53,7 @@
         {% for kingdom in kingdoms %}
         <div class="list_column">
             {% if user.is_authenticated %}
-            <a class="toggle {% if not kingdom.discovered %}off{% endif %}" href="{% url 'dnd_map:switch_discovered' 'kingdom' kingdom.pk %}">
+            <a class="toggle {% if not kingdom.discovered %}off{% endif %}" href="{% url 'dnd_map:toggle_discovered' 'kingdom' kingdom.pk %}">
                 {% if kingdom.discovered %} ✓ {% else %} ✗ {% endif %}
             </a>
             <a class="button" href="{% url 'dnd_map:edit' 'kingdom' kingdom.pk %}">✎</a>
@@ -66,7 +64,7 @@
                 {% if city.kingdom == kingdom %}
                 <li>
                     {% if user.is_authenticated %}
-                    <a class="toggle {% if not city.discovered %}off{% endif %}" href="{% url 'dnd_map:switch_discovered' 'city' city.pk %}">
+                    <a class="toggle {% if not city.discovered %}off{% endif %}" href="{% url 'dnd_map:toggle_discovered' 'city' city.pk %}">
                         {% if city.discovered %} ✓ {% else %} ✗ {% endif %}
                     </a>
                     <a class="button" href="{% url 'dnd_map:edit' 'city' city.pk %}">✎</a>
@@ -78,7 +76,7 @@
                     {% if place.city == city %}
                     <li>
                         {% if user.is_authenticated %}
-                        <a class="toggle {% if not place.discovered %}off{% endif %}" href="{% url 'dnd_map:switch_discovered' 'place' place.pk %}">
+                        <a class="toggle {% if not place.discovered %}off{% endif %}" href="{% url 'dnd_map:toggle_discovered' 'place' place.pk %}">
                             {% if place.discovered %} ✓ {% else %} ✗ {% endif %}
                         </a>
                         <a class="button" href="{% url 'dnd_map:edit' 'place' place.pk %}">✎</a>
@@ -89,7 +87,7 @@
                     {% endfor %}
                     {% if user.is_authenticated %}
                     <li>
-                        <a class="button" href="{% url 'dnd_map:new_parent' 'place' city.pk %}">+</a>
+                        <a class="button" href="{% url 'dnd_map:new' 'place' city.pk %}">+</a>
                     </li>
                     {% endif %}
                 </ul>
@@ -97,7 +95,7 @@
                 {% endfor %}
                 {% if user.is_authenticated %}
                 <li>
-                    <a class="button" href="{% url 'dnd_map:new_parent' 'city' kingdom.pk %}">+</a>
+                    <a class="button" href="{% url 'dnd_map:new' 'city' kingdom.pk %}">+</a>
                 </li>
                 {% endif %}
             </ul>
@@ -109,13 +107,13 @@
         </div>
         {% endif %}
     </div>
-    <li class="list_column">
+    <div class="list_column">
         <h2>Terrain</h2>
         <ul>
             {% for terrain in terrains %}
             <li>
                 {% if user.is_authenticated %}
-                <a class="toggle {% if not terrain.show_description %}off{% endif %}" href="{% url 'dnd_map:switch_discovered' 'terrain' terrain.pk %}">
+                <a class="toggle {% if not terrain.show_description %}off{% endif %}" href="{% url 'dnd_map:toggle_discovered' 'terrain' terrain.pk %}">
                     {% if terrain.show_description %} ✓ {% else %} ✗ {% endif %}
                 </a>
                 <a class="button" href="{% url 'dnd_map:edit' 'terrain' terrain.pk %}">✎</a>

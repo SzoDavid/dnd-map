@@ -5,7 +5,7 @@ from django.shortcuts import render
 from PIL import Image
 from os import path
 
-from dnd_map.models import City, Kingdom, Place, Terrain
+from dnd_map.models import City, Kingdom, Place, TerrainCoords, Terrain
 
 SITE_ROOT = path.dirname(path.realpath(__file__))
 
@@ -39,6 +39,7 @@ def index(request):
         'places':  places_list,
         'cities': cities_list,
         'kingdoms': kingdoms_list,
+        'terrain_coords': TerrainCoords.objects.filter(location='IN'),
         'terrains': Terrain.objects.all(),
     }
 

@@ -1,5 +1,7 @@
+import json
+
 from django.shortcuts import render, get_object_or_404
-from dnd_map.models import Kingdom, City, Place
+from dnd_map.models import Kingdom, City, Place, TerrainCoords, Terrain
 
 from PIL import Image
 from os import path
@@ -36,6 +38,7 @@ def kingdoms(request, kingdom):
         'capital': kingdom_object.city_set.get(capital=True),
         'cities': cities_list,
         'places': places_list,
+        'terrain_coords': TerrainCoords.objects.filter(location='KI', kingdom=kingdom_object),
     }
 
     return render(request, 'dnd_map/details/kingdom.html', context)
@@ -60,6 +63,7 @@ def cities(request, kingdom, city):
         'city': city_object,
         'map_original_width': original_width,
         'places': places_list,
+        'terrain_coords': TerrainCoords.objects.filter(location='CI', city=city_object),
     }
 
     return render(request, 'dnd_map/details/city.html', context)
@@ -84,4 +88,13 @@ def places(request, kingdom, city, place):
 
 
 def terrains(request, terrain):
-    return
+    terrain_object = get_object_or_404(Terrain, name=terrain)
+    config = json.load(open(SITE_ROOT + '/../config.json'))
+
+    context = {
+        'terrain': terrain_object,
+        'terrain_coords': terrain_object.terraincoords_set.all().order_by('terrain'),
+        'world_name': config['main_map']['world_name'],
+    }
+
+    return render(request, 'dnd_map/details/terrain.html', context)
