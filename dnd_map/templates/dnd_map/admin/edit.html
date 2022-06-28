@@ -1,6 +1,6 @@
 {% extends "dnd_map/base.html" %}
 
-{% block title %}Edit {{ settlement.name }} | D&D IMV{% endblock %}
+{% block title %}Edit {% if settlement_type == 'coords'%}coords{% else %}{{ settlement.name }}{% endif %} | D&D IMV{% endblock %}
 
 {% block body %}
 <form method="post" enctype="multipart/form-data">

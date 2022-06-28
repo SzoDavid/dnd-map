@@ -20,8 +20,8 @@
 <div id="information">
     <h1>
         {% if user.is_authenticated %}
-        <a class="toggle {% if not city.discovered %}off{% endif %}" href="{% url 'dnd_map:switch_discovered' 'place' place.pk %}">
-            {% if city.discovered %} ✓ {% else %} ✗ {% endif %}
+        <a class="toggle {% if not place.discovered %}off{% endif %}" href="{% url 'dnd_map:toggle_discovered' 'place' place.pk %}">
+            {% if place.discovered %} ✓ {% else %} ✗ {% endif %}
         </a>
         <a class="button" href="{% url 'dnd_map:edit' 'place' place.pk %}">✎</a>
         {% endif %}
