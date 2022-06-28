@@ -1,0 +1,91 @@
+{% extends "dnd_map/base.html" %}
+
+{% block title %}Help | D&D IMV{% endblock %}
+
+{% block body %}
+<h1>Help</h1>
+
+<div id="models">
+    <h2>Object data</h2>
+
+    <div id="name">
+        <h3>Name</h3>
+        <p>Name of the place. (required)</p>
+        <p><strong>Available for:</strong> Kingdom, City, Place, Terrain</p>
+    </div>
+    <div id="pronunciation">
+        <h3>Pronunciation</h3>
+        <p>If it's needed, you can specify how the name should be pronounced.</p>
+        <p><strong>Available for:</strong> Kingdom, City, Place, Terrain</p>
+    </div>
+    <div id="parents">
+        <h3>Parents</h3>
+
+        <h4>Kingdom</h4>
+        <p>Select the kingdom the city is in, or select one, if the terrain appears on its map.</p>
+        <p><strong>Available for:</strong> City, Coords</p>
+
+        <h4>City</h4>
+        <p>Select the city the place is in, or select one, if the terrain appears on its map.</p>
+        <p><strong>Available for:</strong> Place, Coords</p>
+
+        <h4>Terrain</h4>
+        <p>Select the terrain feature you want to appear on the selected coordinates.</p>
+        <p><strong>Available for:</strong> Coords</p>
+    </div>
+    <div id="type">
+        <h3>Type</h3>
+        <p>A custom type you can define to better describe the place. For example a settlement can be a capital city, big/small or just a town.</p>
+        <p><strong>Available for:</strong> City, Place, Terrain</p>
+    </div>
+    <div id="description">
+        <h3>Description</h3>
+        <p>A short description of the place.</p>
+        <p>If it's a terrain feature and <code>show description</code> is not checked, people won't see it. Ideal when the player's haven't yet discovered the place.</p>
+        <p><strong>Available for:</strong> Kingdom, City, Place, Terrain</p>
+    </div>
+    <div id="map">
+        <h3>Map</h3>
+        <p>You can upload a picture of the map of the place.</p>
+        <p><strong>Available for:</strong> Kingdom, City, Place</p>
+    </div>
+    <div id="coords">
+        <h3>Coords</h3>
+        <p>If the place's parent has a map, you can specify rectangles on it by its top and bottom pixel coordinates. When you click on that area on the map, it will redirect you on this place's page.</p>
+        <p>To get the coordinates open the map in an image editor where it displays the cursors coordinates (MS Paint, GIMP), move your cursor to the upper-left corner of the area, type down the coordinates, then after a comma write down the lower-right corner's coordinates. So the coordinate should be in <code>top-left-width,top-left-height,bottom-right-width,bottom-right-height</code> form.</p>
+        <p><strong>NOTE:</strong> If different areas overlap, the one's that are under the other's may not be visible. For this reason, it's recommended to put these areas over the labels on the map if it's possible. If not keep it in mind that the order is kingdom > terrain > city > place where place appears on the top and kingdom on the bottom.</p>
+        <p><strong>Available for:</strong> Kingdom, Coords</p>
+
+        <h4>Index coords</h4>
+        <p>Coordinates on the main map.</p>
+        <p><strong>Available for:</strong> City, Place</p>
+
+        <h4>Kingdom coords</h4>
+        <p>Coordinates on the kingdom the place is in.</p>
+        <p><strong>Available for:</strong> City, Place</p>
+
+        <h4>City coords</h4>
+        <p>Coordinates on the kingdom the place is in.</p>
+        <p><strong>Available for:</strong> Place</p>
+
+        <h4>Location</h4>
+        <p>Select in what do you want the terrain feature to appear. Can be either index, kingdom or city.</p>
+        <p><strong>Available for:</strong> Coords</p>
+    </div>
+    <div id="capital">
+        <h3>Capital</h3>
+        <p>Select if the city is the capital of the kingdom.</p>
+        <p><strong>Available for:</strong> City</p>
+    </div>
+    <div id="discovered">
+        <h3>Discovered</h3>
+        <p>The players will only be able to see this place if it's discovered, but you can see everything even if it's undiscovered.</p>
+        <p><strong>Available for:</strong> Kingdom, City, Place</p>
+    </div>
+    <div id="show_description">
+        <h3>Show description</h3>
+        <p>Similar to discovered. Hide terrain feature description from users. Ideal when the player's haven't yet discovered the place.</p>
+        <p><strong>Available for:</strong> Terrain</p>
+    </div>
+</div>
+{% endblock %}
