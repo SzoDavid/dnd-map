@@ -48,3 +48,12 @@ def index(request):
 
 def about(request):
     return render(request, 'dnd_map/index/about.html/')
+
+
+def help_page(request):
+    model = 'none'
+
+    if 'model' in request.GET:
+        model = request.GET['model']
+
+    return render(request, 'dnd_map/index/help.html/', {'model': model})

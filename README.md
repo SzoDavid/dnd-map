@@ -25,11 +25,11 @@ Just fill up the database, and it will be ready!
 
 - [X] Display information of places 
 - [X] Admin interface
-- [X] Add terrain features (links for forests, mountains, etc.)
-- [ ] Add help page and include explanations under new and edit forms
-- [ ] Host multiple worlds
-- [ ] Add css
 - [X] About page
-- [ ] Deploy project
-- [ ] Add world creation for users
+- [X] Add terrain features (links for forests, mountains, etc.)
+- [X] Add help page and include explanations under new and edit forms
 - [ ] Remove *kingdom/city/place* structure
+- [ ] Host multiple worlds
+- [ ] Add world creation for users
+- [ ] Add css
+- [ ] Deploy project
