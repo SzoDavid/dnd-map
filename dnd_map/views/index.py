@@ -51,4 +51,9 @@ def about(request):
 
 
 def help_page(request):
-    return render(request, 'dnd_map/index/help.html/')
+    model = 'none'
+
+    if 'model' in request.GET:
+        model = request.GET['model']
+
+    return render(request, 'dnd_map/index/help.html/', {'model': model})
