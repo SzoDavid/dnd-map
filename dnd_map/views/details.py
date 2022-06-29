@@ -28,9 +28,11 @@ def items(request, item_type, item_name):
     if request.user.is_authenticated:
         item_roots = Item.objects.filter(parent=item)
         coords = Coord.objects.all().order_by('-z_axis')
+        appearances = Coord.objects.filter(item=item)
     else:
         item_roots = Item.objects.filter(parent=item, discovered=True)
         coords = Coord.objects.filter(item__discovered=True).order_by('-z_axis')
+        appearances = Coord.objects.filter(item=item, location__discovered=True)
 
     for item_root in item_roots:
         item_list.append(create_item_tree(item_root,
@@ -40,8 +42,10 @@ def items(request, item_type, item_name):
     context = {
         'item': item,
         'map_original_width': original_width,
-        'items': item_list,
-        'coords': coords
+        'world_name': config['main_map']['world_name'],
+        'items': json.dumps(item_list),
+        'coords': coords,
+        'appearances': appearances,
     }
 
     return render(request, 'dnd_map/details/item.html', context)

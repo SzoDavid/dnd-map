@@ -4,19 +4,21 @@
 {% block title %}{{ world_name }} | D&D IMV{% endblock %}
 
 {% block scripts %}
-{% if is_map_set %}
 <script src="{% static 'dnd_map/scripts/mapResize.js' %}"></script>
 <script src="{% static 'dnd_map/scripts/generateListView.js' %}"></script>
 <script>
     window.onload = function () {
+        {% if is_map_set %}
         new ImageMap(document.getElementById('map'),
             document.getElementById('img'),
             parseInt('{{ map_original_width }}')).resize()
+        {% endif %}
 
+        {% if items %}
         populateListView('{{ items | safe }}', {{ user.is_authenticated|yesno:"true,false" }}, "{% url 'dnd_map:new' %}")
+        {% endif %}
     }
 </script>
-{% endif %}
 {% endblock %}
 
 {% block body %}
@@ -24,14 +26,14 @@
 <div id="map_view">
     <img id="img" src="{% static map_path %}" alt="Map of the world" usemap="#map" width="100%">
 
+    {% if coords %}
     <map id="map" name="map">
-        {% if coords %}
         {% for coord in coords %}
         <area shape="rect" coords="{{ coord.coords }}" href="{% url 'dnd_map:details' coord.item.type coord.item.name %}"
               title="{{ coord.item.name }}" alt="{{ coord.item.name }}">
         {% endfor %}
-        {% endif%}
     </map>
+    {% endif%}
 </div>
 {% endif %}
 <div id="list_view">

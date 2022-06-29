@@ -108,6 +108,11 @@ def new(request, pk=0):
 
 
 @login_required(login_url='/dnd/login/')
+def new_coord(request, settlement_type, settlement_id):
+    return
+
+
+@login_required(login_url='/dnd/login/')
 def edit(request, settlement_type, settlement_id):
     # if settlement_type == 'kingdom':
     #     settlement = get_object_or_404(Kingdom, pk=settlement_id)
@@ -171,6 +176,11 @@ def edit(request, settlement_type, settlement_id):
     #         'return': request.META.get('HTTP_REFERER', '/')}
     #
     #     return render(request, 'dnd_map/admin/edit.html', context)
+    return
+
+
+@login_required(login_url='/dnd/login/')
+def edit_coord(request, settlement_type, settlement_id):
     return
 
 

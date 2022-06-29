@@ -17,5 +17,7 @@ urlpatterns = [
     path('<int:item_pk>/edit', views.edit, name='edit'),
     path('<int:item_pk>/togglediscovered', views.toggle_discovered, name='toggle_discovered'),
     path('<int:item_pk>/toggledescription', views.toggle_description, name='toggle_description'),
+    path('<int:item_pk>/addappearance', views.new_coord, name='new_coord'),
+    path('<int:coord_pk>/editappearance', views.edit_coord, name='edit_coord'),
     path('<str:item_type>/<str:item_name>', views.items, name='details')
 ]
