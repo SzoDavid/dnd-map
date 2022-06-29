@@ -28,9 +28,9 @@ Just fill up the database, and it will be ready!
 - [X] About page
 - [X] Add terrain features (links for forests, mountains, etc.)
 - [X] Add help page and include explanations under new and edit forms
-- [ ] Remove *kingdom/city/place* structure
-- [ ] Host multiple worlds
-- [ ] Add world creation for users
+- [ ] Remove *kingdom/city/place terrain* structure
+- [ ] Add multiple world hosting, and world creator
+- [ ] Add area creator for the maps
 - [ ] Discord bot
 - [ ] Add css
 - [ ] Deploy project
