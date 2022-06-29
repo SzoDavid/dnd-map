@@ -16,7 +16,12 @@ def logout_user(request):
 
 
 @login_required(login_url='/dnd/login/')
-def toggle_discovered(request, settlement_type, settlement_id):
+def toggle_description(request, pk):
+    return
+
+
+@login_required(login_url='/dnd/login/')
+def toggle_discovered(request, pk):
     # if settlement_type == 'kingdom':
     #     settlement_object = get_object_or_404(Kingdom, pk=settlement_id)
     # elif settlement_type == 'city':
@@ -61,7 +66,7 @@ def toggle_discovered(request, settlement_type, settlement_id):
 
 
 @login_required(login_url='/dnd/login/')
-def new(request, settlement_type, parent_id=0):
+def new(request, pk=0):
     # if request.method == 'POST':
     #     if settlement_type == 'kingdom':
     #         form = KingdomForm(request.POST, request.FILES)

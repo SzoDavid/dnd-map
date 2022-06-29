@@ -10,6 +10,7 @@ class Item(models.Model):
     parent = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True)
     map = models.ImageField(upload_to='maps/kingdoms', blank=True, null=True)
     discovered = models.BooleanField(default=False)
+    depth = models.IntegerField(default=0)
 
     class Meta:
         unique_together = ('type', 'name')

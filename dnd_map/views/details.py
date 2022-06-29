@@ -10,6 +10,9 @@ from os import path
 SITE_ROOT = path.dirname(path.realpath(__file__))
 
 
+def items(request, item_type, item_name):
+    return
+
 # def kingdoms(request, kingdom):
 #     # kingdom_object = get_object_or_404(Kingdom, name=kingdom)
 #     #
