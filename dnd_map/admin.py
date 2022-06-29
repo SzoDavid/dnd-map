@@ -21,7 +21,7 @@ class ItemAdmin(admin.ModelAdmin):
         }),
         ('Additional data', {
             'classes': ('collapse',),
-            'fields': ('parent', 'map')
+            'fields': ('parent', 'map', 'depth')
         })
     ]
 

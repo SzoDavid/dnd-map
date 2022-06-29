@@ -19,5 +19,6 @@ urlpatterns = [
     path('<int:item_pk>/toggledescription', views.toggle_description, name='toggle_description'),
     path('<int:item_pk>/addappearance', views.new_coord, name='new_coord'),
     path('<int:coord_pk>/editappearance', views.edit_coord, name='edit_coord'),
+    path('<str:object_type>/<int:object_pk>/remove/<path:redirect>', views.items, name='remove'),
     path('<str:item_type>/<str:item_name>', views.items, name='details')
 ]

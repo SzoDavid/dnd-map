@@ -26,10 +26,10 @@
     <h1>
         {% if user.is_authenticated %}
         <a class="toggle {% if not item.discovered %} off {% endif %}" href="{% url 'dnd_map:toggle_discovered' item.pk %}">
-            {{ item.discovered | yesno:'✓,✗'}}
+            ⚑
         </a>
         <a class="toggle {% if not item.show_description %} off {% endif %}" href="{% url 'dnd_map:toggle_description' item.pk %}">
-            {{ item.show_description | yesno:'✓,✗'}}
+            ☰
         </a>
         <a class="button" href="{% url 'dnd_map:edit' item.pk %}">✎</a>
         {% endif %}
@@ -70,7 +70,7 @@
 {% endif %}
 {% if item.map %}
 <div id="map_view">
-    <img id="img" src="{{ item.map.url }}" alt="Map of {{ item.name }}" usemap="#map" width="100%">
+    <img id="img" src="{{ item.map.url }}" alt="Map of {{ item.name }}" usemap="#map" width="50%">
 
     {% if coords %}
     <map id="map" name="map">
@@ -87,10 +87,11 @@
     <div id="list_view" class="list_column"></div>
     {% endif %}
 
-    {% if appearances %}
+    {% if user.is_authenticated or appearances%}
     <div class="list_column">
         <h2>Appearances on maps</h2>
         <ul>
+            {% if appearances %}
             {% for appearance in appearances %}
             <li>
                 {% if user.is_authenticated %}
@@ -103,6 +104,7 @@
                 {% endif %}
             </li>
             {% endfor %}
+            {% endif%}
             {% if user.is_authenticated %}
             <li>
                 <a class="button" href="{% url 'dnd_map:new_coord' item.pk %}">+</a>
@@ -110,6 +112,6 @@
             {% endif %}
         </ul>
     </div>
-    {% endif%}
+    {% endif %}
 </div>
 {% endblock %}

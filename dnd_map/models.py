@@ -1,6 +1,21 @@
 from django.db import models
 
 
+def discovered(item):
+    if item.parent is not None:
+        discovered(item.parent)
+    item.discovered = True
+    item.save()
+
+
+def undiscovered(item):
+    if item.item_set.count() != 0:
+        for child in item.item_set.filter(discovered=True):
+            undiscovered(child)
+    item.discovered = False
+    item.save()
+
+
 class Item(models.Model):
     name = models.CharField(max_length=64)
     pronunciation = models.CharField(max_length=64, blank=True, null=True)
@@ -11,6 +26,12 @@ class Item(models.Model):
     map = models.ImageField(upload_to='maps/kingdoms', blank=True, null=True)
     discovered = models.BooleanField(default=False)
     depth = models.IntegerField(default=0)
+
+    def set_discovered(self):
+        discovered(self)
+
+    def set_undiscovered(self):
+        undiscovered(self)
 
     class Meta:
         unique_together = ('type', 'name')
