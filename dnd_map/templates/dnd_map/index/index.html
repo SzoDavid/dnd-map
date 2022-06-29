@@ -25,30 +25,12 @@
     <img id="img" src="{% static map_path %}" alt="Map of the world" usemap="#map" width="100%">
 
     <map id="map" name="map">
-        {% comment %}
-        {% for place in places %}
-        {% if place.index_coords %}
-        <area shape="rect" coords="{{ place.index_coords }}" href="{% url 'dnd_map:places' place.city.kingdom.name place.city.name place.name %}"
-              title="{{ place.name}}, {{ place.city.name }}, {{ place.city.kingdom.name }}" alt="{{ place.name}}, {{ city.name }}, {{ city.kingdom }}">
-        {% endif %}
-        {% endfor%}
-        {% for city in cities %}
-        {% if city.index_coords %}
-        <area shape="rect" coords="{{ city.index_coords }}" href="{% url 'dnd_map:cities' city.kingdom.name city.name %}"
-              title="{{ city.name }}, {{ city.kingdom.name }}" alt="{{ city.name }}, {{ city.kingdom.name }}">
-        {% endif %}
-        {% endfor%}
-        {% for terrain_coord in terrain_coords %}
-        <area shape="rect" coords="{{ terrain_coord.coords }}" href="{% url 'dnd_map:terrains' terrain_coord.terrain.name %}"
-              title="{{ terrain_coord.terrain.name }}" alt="{{ terrain_coord.terrain.name }}">
-        {% endfor%}
-        {% for kingdom in kingdoms %}
-        {% if kingdom.coords %}
-        <area shape="rect" coords="{{ kingdom.coords }}" href="{% url 'dnd_map:kingdoms' kingdom.name %}"
-              title="{{ kingdom.name }}" alt="{{ kingdom.name }}">
-        {% endif %}
-        {% endfor%}
-        {% endcomment %}
+        {% if coords %}
+        {% for coord in coords %}
+        <area shape="rect" coords="{{ coord.coords }}" href="{% url 'dnd_map:details' coord.item.type coord.item.name %}"
+              title="{{ coord.item.name }}" alt="{{ coord.item.name }}">
+        {% endfor %}
+        {% endif%}
     </map>
 </div>
 {% endif %}

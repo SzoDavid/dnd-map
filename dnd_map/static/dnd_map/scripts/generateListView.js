@@ -4,16 +4,11 @@ const div = '<div class="list_column">{0}<a href="{1}">{2}</a>{3}</div>{4}'
 const li = '<li>{0}<a href="{1}">{2}</a>{3}</li>{4}'
 
 String.prototype.format = function () {
-    // store arguments in an array
-    let args = arguments;
-    // use replace to iterate over the string
-    // select the match and check if related argument is present
-    // if yes, replace the match with the argument
+    let args = arguments
     return this.replace(/{(\d+)}/g, function (match, index) {
-        // check if the argument is present
-        return typeof args[index] == 'undefined' ? match : args[index];
-    });
-};
+        return typeof args[index] == 'undefined' ? match : args[index]
+    })
+}
 
 function generateList(items, auth) {
     let result = ''
