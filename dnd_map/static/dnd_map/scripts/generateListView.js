@@ -61,7 +61,9 @@ function populateListView(json, auth, add_div_url) {
         }
     })
 
-    result += `<div class="list_column"><a class="button" href="${add_div_url}">+</a></div>`
+    if (auth) {
+        result += `<div class="list_column"><a class="button" href="${add_div_url}">+</a></div>`
+    }
 
     console.log('hmm')
     console.log(result)
