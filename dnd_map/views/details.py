@@ -12,10 +12,10 @@ from dnd_map.views import create_item_tree
 SITE_ROOT = path.dirname(path.realpath(__file__))
 
 
-def items(request, item_type, item_name):
+def items(request, item_pk):
     config = json.load(open(SITE_ROOT + '/../config.json'))
 
-    item = get_object_or_404(Item, type=item_type, name=item_name)
+    item = get_object_or_404(Item, pk=item_pk)
 
     original_width = None
     item_list = []
@@ -38,6 +38,8 @@ def items(request, item_type, item_name):
         item_list.append(create_item_tree(item_root,
                                           not request.user.is_authenticated,
                                           config['max_item_display_depth'] - 1))
+
+    item_list.insert(0, {'max_depth': config['max_item_display_depth']})
 
     context = {
         'item': item,

@@ -15,7 +15,7 @@
         {% endif %}
 
         {% if items %}
-        populateListView('{{ items | safe }}', {{ user.is_authenticated | yesno:"true,false" }}, "{% url 'dnd_map:new' %}")
+        populateListView('{{ items | safe }}', {{ user.is_authenticated | yesno:"true,false" }}, "{% url 'dnd_map:new' item.pk %}")
         {% endif %}
     }
 </script>
@@ -55,7 +55,7 @@
         {% if item.parent %}
         <tr>
             <th>Parent:</th>
-            <td><a href="{% url 'dnd_map:details' item.parent.type item.parent.name %}">{{ item.parent.name }}</td>
+            <td><a href="{% url 'dnd_map:details' item.parent.pk %}">{{ item.parent.name }}</td>
         </tr>
         {% endif%}
     </table>
@@ -81,7 +81,7 @@
     {% if coords %}
     <map id="map" name="map">
         {% for coord in coords %}
-        <area shape="rect" coords="{{ coord.coords }}" href="{% url 'dnd_map:details' coord.item.type coord.item.name %}"
+        <area shape="rect" coords="{{ coord.coords }}" href="{% url 'dnd_map:details' coord.item.pk %}"
               title="{{ coord.item.name }}" alt="{{ coord.item.name }}">
         {% endfor %}
     </map>

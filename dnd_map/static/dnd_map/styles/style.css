@@ -32,18 +32,6 @@ ul {
     font-size: larger;
 }
 
-#menu {
-    margin-bottom: 20px;
-}
-
-#model_fields div {
-    margin-bottom: 40px;
-}
-
-#model_fields div p,h4 {
-    margin-left: 40px;
-}
-
 .toggle {
     background-color: #4CAF50;
     color: white;
@@ -80,10 +68,26 @@ ul {
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-weight: bolder;
 }
 
 .button:hover {
     background-color: #4CAF50;
     color: white;
+}
+
+.add {
+    width: 100%;
+}
+
+.item {
+    width: 100%;
+}
+
+.item tbody tr {
+    width: 100%;
+}
+
+.item tbody tr td a{
+    display: inline-block;
+    width: available;
 }

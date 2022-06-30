@@ -3,8 +3,9 @@ from django.urls import reverse
 
 def create_item_node(item):
     return {
-        'name': item.name,
-        'details': reverse('dnd_map:details', args=(item.type, item.name)),
+        'name': str(item.name).replace('\'', '\\u0027'),
+        'type': str(item.type).replace('\'', '\\u0027'),
+        'details': reverse('dnd_map:details', args=(item.pk,)),
         'edit': reverse('dnd_map:edit', args=(item.pk,)),
         'discovered': item.discovered,
         'toggle_discovered': reverse('dnd_map:toggle_discovered', args=(item.pk,)),
@@ -73,5 +74,5 @@ def _check_leaf_depth(item, item_depth, max_depth):
         return 0
     checker = 0
     for child in item.item_set.all():
-        checker += check_leaf_depth(child, item_depth + 1, max_depth)
+        checker += _check_leaf_depth(child, item_depth + 1, max_depth)
     return checker
