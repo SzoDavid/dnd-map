@@ -33,4 +33,11 @@
     <input type="reset" value="Clear">
     <input type="submit" value="Save">
 </form>
+{% if type == 'coord' %}
+<p>To get the coordinates open the map in an image editor where it displays the cursors coordinates (MS Paint, GIMP),
+    move your cursor to the upper-left corner of the area, type down the coordinates, then after a comma write down the
+    lower-right corner's coordinates. So the coordinate should be in
+    <code>top-left-width,top-left-height,bottom-right-width,bottom-right-height</code> form.</p>
+<p>Anyways an area selector is coming soon </p>
+{% endif %}
 {% endblock %}
