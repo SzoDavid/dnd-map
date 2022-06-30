@@ -37,8 +37,6 @@ function generateList(items, auth) {
 function populateListView(json, auth, add_div_url) {
     const items = JSON.parse(json)
 
-    console.log(items)
-
     let result = ''
 
     items.forEach(function (item) {
@@ -65,8 +63,6 @@ function populateListView(json, auth, add_div_url) {
         result += `<div class="list_column"><a class="button" href="${add_div_url}">+</a></div>`
     }
 
-    console.log('hmm')
-    console.log(result)
     document.getElementById('list_view').innerHTML = result
 }
 

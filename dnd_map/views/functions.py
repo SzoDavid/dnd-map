@@ -64,8 +64,7 @@ def _has_loop(parent, child):
 
 
 def check_leaf_depth(item, item_depth, max_depth):
-    result = _check_leaf_depth(item, item_depth, max_depth)
-    return result == 0
+    return _check_leaf_depth(item, item_depth, max_depth) == 0
 
 
 def _check_leaf_depth(item, item_depth, max_depth):
