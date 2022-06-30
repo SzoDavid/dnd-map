@@ -1,35 +1,36 @@
 # D&D Interactive Map Viewer
 
-A django app for creating interactive maps for your D&D campaign or anything else. 
+A django app for creating interactive maps for your D&D campaign or anything else.
 Just fill up the database, and it will be ready!
 
 ## What can this project do?
 
- - Display maps with clickable regions, for your settlements
- - Display settlements in a table form
- - Display terrain features (forests, mountains, etc.) on multiple maps
- - Hide terrain feature description from users, if it's undiscovered
- - Store data of your settlements: kingdoms, cities, places:
-   - Name
-   - Pronunciation (optional)
-   - Parent (Ex: the kingdom the city is in)
-   - Type (Define if the city is a capital, a large city or just a town, also optional)
-   - Description (optional)
-   - Map (optional)
-   - Coordinates (Define a rectangle using pixel coordinates where this place is located on the parent map, optional)
-   - Is it discovered (Makes you able to disallow people to view places that were not yet discovered)
- - Admin interface for adding, editing, removing settlements, and toggle buttons for quickly changing discovered state
+- Create locations with hierarchy, and display them in a table form
+- Display maps with clickable regions, which will redirect to the location's page
+- Display location on multiple maps
+- Store data of your locations:
+    - Name
+    - Pronunciation
+    - Type: classification of the item. Examples: *kingdom, capital, city, town, forest, etc.*
+    - Notes for the dungeon master only
+    - Description, which can be hidden from the players
+    - Parent: for example the kingdom the city is in
+    - Map
+    - Appearance: define area's on other location's maps, where clicked, it will redirect to the location's page
+- Hide location from players if it's not discovered yet
+- Admin interface for adding, editing, removing locations and appearances, and toggle buttons for quickly 
+showing/hiding locations or descriptions
 
 
 ## TODO's
 
-- [X] Display information of places 
+- [X] Display information of places
 - [X] Admin interface
 - [X] About page
-- [X] Add terrain features (links for forests, mountains, etc.)
-- [X] Add help page and include explanations under new and edit forms
-- [ ] Remove *kingdom/city/place* structure
+- [X] Include explanations under new and edit forms
+- [X] Remove *kingdom/city/place* structure
 - [ ] Host multiple worlds
 - [ ] Add world creation for users
 - [ ] Add css
 - [ ] Deploy project
+- [ ] Add documentations
