@@ -1,13 +1,17 @@
-import os
+import json
+from os import path, remove
 
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 
-from dnd_map.forms import KingdomForm, CityForm, PlaceForm, TerrainForm, TerrainCoordsForm
-from dnd_map.models import Kingdom, City, Place, TerrainCoords, Terrain
+from dnd_map.forms import ItemForm, CoordForm
+from dnd_map.models import Item, Coord
+from dnd_map.views.functions import calculate_depth, has_loop, check_leaf_depth
+
+SITE_ROOT = path.dirname(path.realpath(__file__))
 
 
 def logout_user(request):
@@ -16,170 +20,193 @@ def logout_user(request):
 
 
 @login_required(login_url='/dnd/login/')
-def toggle_discovered(request, settlement_type, settlement_id):
-    if settlement_type == 'kingdom':
-        settlement_object = get_object_or_404(Kingdom, pk=settlement_id)
-    elif settlement_type == 'city':
-        settlement_object = get_object_or_404(City, pk=settlement_id)
-    elif settlement_type == 'place':
-        settlement_object = get_object_or_404(Place, pk=settlement_id)
-    elif settlement_type == 'terrain':
-        settlement_object = get_object_or_404(Terrain, pk=settlement_id)
-    else:
-        raise Http404("Type does not exist")
-
-    if settlement_type == 'terrain':
-        settlement_object.show_description = not settlement_object.show_description
-    else:
-        settlement_object.discovered = not settlement_object.discovered
-
-        if settlement_object.discovered:
-            if settlement_type == 'city':
-                settlement_object.kingdom.discovered = True
-                settlement_object.kingdom.save()
-            elif settlement_type == 'place':
-                settlement_object.city.discovered = True
-                settlement_object.city.kingdom.discovered = True
-                settlement_object.city.save()
-                settlement_object.city.kingdom.save()
-        else:
-            if settlement_type == 'kingdom':
-                for city in settlement_object.city_set.filter(discovered=True):
-                    city.discovered = False
-                    city.save()
-                    for place in city.place_set.filter(discovered=True):
-                        place.discovered = False
-                        place.save()
-            elif settlement_type == 'city':
-                for place in settlement_object.place_set.filter(discovered=True):
-                    place.discovered = False
-                    place.save()
-
-    settlement_object.save()
+def toggle_description(request, item_pk):
+    item = get_object_or_404(Item, pk=item_pk)
+    item.show_description = not item.show_description
+    item.save()
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 
 @login_required(login_url='/dnd/login/')
-def new(request, settlement_type, parent_id=0):
+def toggle_discovered(request, item_pk):
+    item = get_object_or_404(Item, pk=item_pk)
+
+    if item.discovered:
+        item.set_undiscovered()
+    else:
+        item.set_discovered()
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+
+@login_required(login_url='/dnd/login/')
+def new(request, item_pk=0):
+    config = json.load(open(SITE_ROOT + '/../config.json'))
+
+    context = {
+        'type': 'item',
+        'edit': False,
+        'return': request.META.get('HTTP_REFERER', '/')}
+
     if request.method == 'POST':
-        if settlement_type == 'kingdom':
-            form = KingdomForm(request.POST, request.FILES)
-        elif settlement_type == 'city':
-            form = CityForm(request.POST, request.FILES)
-        elif settlement_type == 'place':
-            form = PlaceForm(request.POST, request.FILES)
-        elif settlement_type == 'terrain':
-            form = TerrainForm(request.POST)
-        else:
-            form = TerrainCoordsForm(request.POST)
+        form = ItemForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            depth = calculate_depth(form.instance)
+
+            if depth >= config['max_item_display_depth']:
+                context.update({
+                    'form': form,
+                    'error': 'By selecting that parent the item\'s depth would be bigger than the allowed maximum!'
+                })
+                return render(request, 'dnd_map/admin/editor.html', context)
+
+            if depth < config['max_item_display_depth']:
+                result = form.save(commit=False)
+                result.depth = depth
+                result.save()
+
+            return HttpResponseRedirect(request.POST['return'])
+        context['form'] = form
+        return render(request, 'dnd_map/admin/editor.html', context)
+    else:
+        form = ItemForm()
+
+        if item_pk != 0:
+            parent = get_object_or_404(Item, pk=item_pk)
+            if parent.depth < config['max_item_display_depth'] - 1:
+                form = ItemForm(instance=Item(parent=parent))
+
+        form.fields['parent'].queryset = Item.objects.exclude(depth=config['max_item_display_depth'] - 1)
+
+        context['form'] = form
+        return render(request, 'dnd_map/admin/editor.html', context)
+
+
+@login_required(login_url='/dnd/login/')
+def new_coord(request, item_pk):
+    context = {
+        'type': 'coord',
+        'edit': False,
+        'return': request.META.get('HTTP_REFERER', '/')}
+
+    if request.method == 'POST':
+        form = CoordForm(request.POST)
 
         if form.is_valid():
             form.save()
 
             return HttpResponseRedirect(request.POST['return'])
+        context['form'] = form
+        return render(request, 'dnd_map/admin/editor.html', context)
     else:
-        if settlement_type == 'kingdom':
-            form = KingdomForm()
-        elif settlement_type == 'city':
-            form = CityForm(instance=City(kingdom=get_object_or_404(Kingdom, pk=parent_id)))
-        elif settlement_type == 'place':
-            form = PlaceForm(instance=Place(city=get_object_or_404(City, pk=parent_id)))
-        elif settlement_type == 'terrain':
-            form = TerrainForm()
-        else:
-            form = TerrainCoordsForm(instance=TerrainCoords(terrain=get_object_or_404(Terrain, pk=parent_id)))
+        item = get_object_or_404(Item, pk=item_pk)
+        form = CoordForm(instance=Coord(item=item, z_axis=item.depth))
 
-        if settlement_type == 'terrain_coords':
-            settlement_type = 'coords'
+        form.fields['location'].queryset = Item.objects.exclude(map='')
 
-        context = {
-            'form': form,
-            'settlement_type': settlement_type,
-            'return': request.META.get('HTTP_REFERER', '/')}
-
-        return render(request, 'dnd_map/admin/new.html', context)
+        context['form'] = form
+        return render(request, 'dnd_map/admin/editor.html', context)
 
 
 @login_required(login_url='/dnd/login/')
-def edit(request, settlement_type, settlement_id):
-    if settlement_type == 'kingdom':
-        settlement = get_object_or_404(Kingdom, pk=settlement_id)
-    elif settlement_type == 'city':
-        settlement = get_object_or_404(City, pk=settlement_id)
-    elif settlement_type == 'place':
-        settlement = get_object_or_404(Place, pk=settlement_id)
-    elif settlement_type == 'terrain':
-        settlement = get_object_or_404(Terrain, pk=settlement_id)
-    else:
-        settlement = get_object_or_404(TerrainCoords, pk=settlement_id)
+def edit(request, item_pk):
+    item = get_object_or_404(Item, pk=item_pk)
+    config = json.load(open(SITE_ROOT + '/../config.json'))
+
+    context = {
+        'type': 'item',
+        'edit': True,
+        'has_map': bool(item.map),
+        'object': item,
+        'return': request.META.get('HTTP_REFERER', '/')}
 
     if request.method == 'POST':
-        if settlement_type == 'kingdom':
-            form = KingdomForm(request.POST, request.FILES, instance=settlement)
-        elif settlement_type == 'city':
-            form = CityForm(request.POST, request.FILES, instance=settlement)
-        elif settlement_type == 'place':
-            form = PlaceForm(request.POST, request.FILES, instance=settlement)
-        elif settlement_type == 'terrain':
-            form = TerrainForm(request.POST, instance=settlement)
-        else:
-            form = TerrainCoordsForm(request.POST, instance=settlement)
+        form = ItemForm(request.POST, request.FILES, instance=item)
 
         if form.is_valid():
-            if request.POST['path'] != '':
-                if bool(form.instance.map):
-                    if request.POST['path'] != form.instance.map.path:
-                        os.remove(request.POST['path'])
-                else:
-                    os.remove(request.POST['path'])
+            depth = calculate_depth(form.instance)
 
+            # TODO: move to form's clean method
+            if has_loop(form.instance):
+                context.update({
+                    'form': form,
+                    'error': 'You selected a child as parent!'
+                })
+                return render(request, 'dnd_map/admin/editor.html', context)
+            if depth >= config['max_item_display_depth']:
+                context.update({
+                    'form': form,
+                    'error': 'By selecting that parent the item\'s depth would be bigger than the allowed maximum!'
+                })
+                return render(request, 'dnd_map/admin/editor.html', context)
+            if not check_leaf_depth(form.instance, depth, config['max_item_display_depth']):
+                context.update({
+                    'form': form,
+                    'error': 'By selecting that parent the item\'s children\'s depth would be bigger than the allowed '
+                             'maximum!'
+                })
+                return render(request, 'dnd_map/admin/editor.html', context)
+
+            if calculate_depth(form.instance) < config['max_item_display_depth']:
+                if request.POST['path'] != '':
+                    if bool(form.instance.map):
+                        if request.POST['path'] != form.instance.map.path:
+                            remove(request.POST['path'])
+                        else:
+                            remove(request.POST['path'])
+
+                result = form.save(commit=False)
+                result.depth = depth
+                result.save()
+
+            return HttpResponseRedirect(request.POST['return'])
+
+        context['form'] = form
+        return render(request, 'dnd_map/admin/editor.html', context)
+    else:
+        form = ItemForm(instance=item)
+
+        form.fields['parent'].queryset = Item.objects.exclude(pk=item_pk)\
+                                                     .exclude(depth=config['max_item_display_depth'] - 1)
+
+        context['form'] = form
+        return render(request, 'dnd_map/admin/editor.html', context)
+
+
+@login_required(login_url='/dnd/login/')
+def edit_coord(request, coord_pk):
+    coord = get_object_or_404(Coord, pk=coord_pk)
+
+    context = {
+        'type': 'coord',
+        'edit': True,
+        'has_map': False,
+        'object': coord,
+        'return': request.META.get('HTTP_REFERER', '/')}
+
+    if request.method == 'POST':
+        form = CoordForm(request.POST, request.FILES, instance=coord)
+
+        if form.is_valid():
             form.save()
 
             return HttpResponseRedirect(request.POST['return'])
+        context['form'] = form
+        return render(request, 'dnd_map/admin/editor.html', context)
     else:
-        if settlement_type == 'kingdom':
-            form = KingdomForm(instance=settlement)
-        elif settlement_type == 'city':
-            form = CityForm(instance=settlement)
-        elif settlement_type == 'place':
-            form = PlaceForm(instance=settlement)
-        elif settlement_type == 'terrain':
-            form = TerrainForm(instance=settlement)
-        else:
-            form = TerrainCoordsForm(instance=settlement)
+        form = CoordForm(instance=get_object_or_404(Coord, pk=coord_pk))
 
-        settlement_has_map = False
-
-        if not (settlement_type == 'terrain' or settlement_type == 'terrain_coords'):
-            settlement_has_map = bool(settlement.map)
-
-        if settlement_type == 'terrain_coords':
-            settlement_type = 'coords'
-
-        context = {
-            'form': form,
-            'settlement_type': settlement_type,
-            'settlement_has_map': settlement_has_map,
-            'settlement': settlement,
-            'return': request.META.get('HTTP_REFERER', '/')}
-
-        return render(request, 'dnd_map/admin/edit.html', context)
+        context['form'] = form
+        return render(request, 'dnd_map/admin/editor.html', context)
 
 
 @login_required(login_url='/dnd/login/')
-def remove(request, settlement_type, settlement_id, redirect):
-    if settlement_type == 'kingdom':
-        settlement = get_object_or_404(Kingdom, pk=settlement_id)
-    elif settlement_type == 'city':
-        settlement = get_object_or_404(City, pk=settlement_id)
-    elif settlement_type == 'place':
-        settlement = get_object_or_404(Place, pk=settlement_id)
-    elif settlement_type == 'terrain':
-        settlement = get_object_or_404(Terrain, pk=settlement_id)
+def remove(request, object_type, object_pk, redirect):
+    if object_type == 'item':
+        get_object_or_404(Item, pk=object_pk).delete()
     else:
-        settlement = get_object_or_404(TerrainCoords, pk=settlement_id)
-
-    settlement.delete()
+        get_object_or_404(Coord, pk=object_pk).delete()
 
     return HttpResponseRedirect(redirect)

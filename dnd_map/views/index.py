@@ -5,7 +5,9 @@ from django.shortcuts import render
 from PIL import Image
 from os import path
 
-from dnd_map.models import City, Kingdom, Place, TerrainCoords, Terrain
+from dnd_map.models import Item, Coord
+from dnd_map.views.functions import create_item_tree
+
 
 SITE_ROOT = path.dirname(path.realpath(__file__))
 
@@ -15,6 +17,7 @@ def index(request):
 
     is_map_set = config['main_map']['path'] != ''
 
+    items = []
     original_width = None
 
     if is_map_set:
@@ -23,24 +26,26 @@ def index(request):
         map_img.close()
 
     if request.user.is_authenticated:
-        places_list = Place.objects.all()
-        cities_list = City.objects.all()
-        kingdoms_list = Kingdom.objects.all()
+        item_roots = Item.objects.filter(parent__isnull=True)
+        coords = Coord.objects.all().order_by('-z_axis')
     else:
-        places_list = Place.objects.filter(discovered=True)
-        cities_list = City.objects.filter(discovered=True)
-        kingdoms_list = Kingdom.objects.filter(discovered=True)
+        item_roots = Item.objects.filter(parent__isnull=True, discovered=True)
+        coords = Coord.objects.filter(item__discovered=True).order_by('-z_axis')
+
+    for item_root in item_roots:
+        items.append(create_item_tree(item_root,
+                                      not request.user.is_authenticated,
+                                      config['max_item_display_depth'] - 1))
+
+    items.insert(0, {'max_depth': config['max_item_display_depth']})
 
     context = {
         'is_map_set': is_map_set,
         'map_original_width': original_width,
         'world_name': config['main_map']['world_name'],
         'map_path': '/dnd_map/images/maps/' + config['main_map']['path'],
-        'places':  places_list,
-        'cities': cities_list,
-        'kingdoms': kingdoms_list,
-        'terrain_coords': TerrainCoords.objects.filter(location='IN'),
-        'terrains': Terrain.objects.all(),
+        'items': json.dumps(items),
+        'coords': coords,
     }
 
     return render(request, 'dnd_map/index/index.html/', context)
@@ -48,12 +53,3 @@ def index(request):
 
 def about(request):
     return render(request, 'dnd_map/index/about.html/')
-
-
-def help_page(request):
-    model = 'none'
-
-    if 'model' in request.GET:
-        model = request.GET['model']
-
-    return render(request, 'dnd_map/index/help.html/', {'model': model})

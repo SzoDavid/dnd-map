@@ -80,6 +80,7 @@ ul {
     text-align: center;
     text-decoration: none;
     display: inline-block;
+    font-weight: bolder;
 }
 
 .button:hover {

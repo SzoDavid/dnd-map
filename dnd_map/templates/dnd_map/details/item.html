@@ -1,0 +1,123 @@
+{% extends "dnd_map/base.html" %}
+{% load static %}
+
+{% block title %}{{ item.name }} | D&D IMV{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'dnd_map/scripts/mapResize.js' %}"></script>
+<script src="{% static 'dnd_map/scripts/generateListView.js' %}"></script>
+<script>
+    window.onload = function () {
+        {% if is_map_set %}
+        new ImageMap(document.getElementById('map'),
+            document.getElementById('img'),
+            parseInt("{{ map_original_width }}")).resize()
+        {% endif %}
+
+        {% if items %}
+        populateListView('{{ items | safe }}', {{ user.is_authenticated | yesno:"true,false" }}, "{% url 'dnd_map:new' %}")
+        {% endif %}
+    }
+</script>
+{% endblock %}
+
+{% block body %}
+<div id="information">
+    <h1>
+        {% if user.is_authenticated %}
+        <a class="toggle {% if not item.discovered %} off {% endif %}" href="{% url 'dnd_map:toggle_discovered' item.pk %}">
+            ⚑
+        </a>
+        <a class="toggle {% if not item.show_description %} off {% endif %}" href="{% url 'dnd_map:toggle_description' item.pk %}">
+            ☰
+        </a>
+        <a class="button" href="{% url 'dnd_map:edit' item.pk %}">✎</a>
+        {% endif %}
+        {{ item.name }}
+    </h1>
+    <table>
+        <tr>
+            <th>Name:</th>
+            <td>{{ item.name }}</td>
+        </tr>
+        {% if item.pronunciation %}
+        <tr>
+            <th>Pronunciation:</th>
+            <td>{{ item.pronunciation }}</td>
+        </tr>
+        {% endif%}
+        {% if item.type %}
+        <tr>
+            <th>Type:</th>
+            <td>{{ item.type }}</td>
+        </tr>
+        {% endif%}
+        {% if item.parent %}
+        <tr>
+            <th>Parent:</th>
+            <td><a href="{% url 'dnd_map:details' item.parent.type item.parent.name %}">{{ item.parent.name }}</td>
+        </tr>
+        {% endif%}
+    </table>
+</div>
+{% if user.is_authenticated and item.notes %}
+<div id="notes">
+    <h2>Notes</h2>
+    <p>{{ item.notes }}</p>
+</div>
+{% endif %}
+{% if user.is_authenticated or item.show_description %}
+{% if item.description %}
+<div id="description">
+    <h2>Description</h2>
+    <p>{{ item.description }}</p>
+</div>
+{% endif %}
+{% endif %}
+{% if item.map %}
+<div id="map_view">
+    <img id="img" src="{{ item.map.url }}" alt="Map of {{ item.name }}" usemap="#map" width="50%">
+
+    {% if coords %}
+    <map id="map" name="map">
+        {% for coord in coords %}
+        <area shape="rect" coords="{{ coord.coords }}" href="{% url 'dnd_map:details' coord.item.type coord.item.name %}"
+              title="{{ coord.item.name }}" alt="{{ coord.item.name }}">
+        {% endfor %}
+    </map>
+    {% endif%}
+</div>
+{% endif %}
+<div>
+    {% if items %}
+    <div id="list_view" class="list_column"></div>
+    {% endif %}
+
+    {% if user.is_authenticated or appearances%}
+    <div class="list_column">
+        <h2>Appearances on maps</h2>
+        <ul>
+            {% if appearances %}
+            {% for appearance in appearances %}
+            <li>
+                {% if user.is_authenticated %}
+                <a class="button" href="{% url 'dnd_map:edit_coord' appearance.pk %}">✎</a>
+                {% endif %}
+                {% if appearance.location %}
+                <a href="{% url 'dnd_map:item' appearance.location.type appearance.location.name %}">{{ appearance.location.name }}</a>
+                {% else %}
+                <a href="{% url 'dnd_map:index' %}">{{ world_name }}</a>
+                {% endif %}
+            </li>
+            {% endfor %}
+            {% endif%}
+            {% if user.is_authenticated %}
+            <li>
+                <a class="button" href="{% url 'dnd_map:new_coord' item.pk %}">+</a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
