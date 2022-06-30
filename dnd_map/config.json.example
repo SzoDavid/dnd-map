@@ -4,7 +4,7 @@
     "path": "",
     "world_name": ""
   },
-  "_comment_tree_depth": "Define how deep can the item relation tree get. By setting the value 0 it will be infinite (not recommended)",
+  "_comment_tree_depth": "Define how deep can the item relation tree get. Must be larger than 0!",
   "max_item_child_tree_depth": 5,
   "_comment_display_depth": "Define how deep should the list view display the item relation tree. Smaller than or equal to max_item_child_tree_depth",
   "max_item_display_depth": 5

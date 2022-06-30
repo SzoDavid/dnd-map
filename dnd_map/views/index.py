@@ -8,6 +8,7 @@ from os import path
 from dnd_map.models import Item, Coord
 from dnd_map.views.functions import create_item_tree
 
+
 SITE_ROOT = path.dirname(path.realpath(__file__))
 
 
@@ -32,7 +33,11 @@ def index(request):
         coords = Coord.objects.filter(item__discovered=True).order_by('-z_axis')
 
     for item_root in item_roots:
-        items.append(create_item_tree(item_root, not request.user.is_authenticated, config['max_item_display_depth'] - 1))
+        items.append(create_item_tree(item_root,
+                                      not request.user.is_authenticated,
+                                      config['max_item_display_depth'] - 1))
+
+    items.insert(0, {'max_depth': config['max_item_display_depth']})
 
     context = {
         'is_map_set': is_map_set,
@@ -48,12 +53,3 @@ def index(request):
 
 def about(request):
     return render(request, 'dnd_map/index/about.html/')
-
-
-def help_page(request):
-    model = 'none'
-
-    if 'model' in request.GET:
-        model = request.GET['model']
-
-    return render(request, 'dnd_map/index/help.html/', {'model': model})

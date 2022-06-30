@@ -8,7 +8,6 @@ app_name = 'dnd_map'
 urlpatterns = [
     path('', views.index, name='index'),
     path('about', views.about, name='about'),
-    path('help', views.help_page, name='help'),
     path('login', auth_views.LoginView.as_view(template_name='dnd_map/admin/login.html', next_page='/dnd/',
                                                redirect_authenticated_user=True), name='login'),
     path('logout', views.logout_user, name='logout'),
@@ -19,6 +18,6 @@ urlpatterns = [
     path('<int:item_pk>/toggledescription', views.toggle_description, name='toggle_description'),
     path('<int:item_pk>/addappearance', views.new_coord, name='new_coord'),
     path('<int:coord_pk>/editappearance', views.edit_coord, name='edit_coord'),
-    path('<str:object_type>/<int:object_pk>/remove/<path:redirect>', views.items, name='remove'),
+    path('<str:object_type>/<int:object_pk>/remove/<path:redirect>', views.remove, name='remove'),
     path('<str:item_type>/<str:item_name>', views.items, name='details')
 ]

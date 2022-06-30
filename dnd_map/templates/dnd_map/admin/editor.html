@@ -1,0 +1,36 @@
+{% extends "dnd_map/base.html" %}
+
+{% block title %}{% if edit %}Edit {% else %}New {%endif%}{% if type == 'coord'%}appearance{% else %}{% if edit %}{{ object.name }}{% else %}location{%endif%}{% endif %} | D&D IMV{% endblock %}
+
+{% block body %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <fieldset>
+        <legend><h1>{% if edit %}Edit {% else %}New {%endif%}{% if type == 'coord'%}appearance{% else %}{% if edit %}{{ object.name }}{% else %}location{%endif%}{% endif %}</h1></legend>
+        {% if form.errors or error %}
+        {{ form.non_field_errors}}
+        {{ error }}
+        {% endif %}
+        <table>
+            {% for field in form %}
+            <tr>
+                <th>{{ field.label_tag }}</th>
+                <td>{{ field }}</td>
+                <td class="help">{{ field.help_text }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </fieldset>
+    <label hidden>
+        <input name="return" value="{{ return }}" hidden>
+        {% if edit %}
+        <input name="path" {% if has_map %} value="{{ object.map.path }}"  {% endif %} hidden>
+        {% endif %}
+    </label>
+    {% if edit %}
+    <a href="{% url 'dnd_map:remove' type object.pk return %}">Remove</a>
+    {% endif %}
+    <input type="reset" value="Clear">
+    <input type="submit" value="Save">
+</form>
+{% endblock %}

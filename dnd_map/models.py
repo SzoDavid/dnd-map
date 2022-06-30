@@ -19,7 +19,7 @@ def undiscovered(item):
 class Item(models.Model):
     name = models.CharField(max_length=64)
     pronunciation = models.CharField(max_length=64, blank=True, null=True)
-    type = models.CharField(max_length=32, blank=True, null=True)
+    type = models.CharField(max_length=32)
     description = models.TextField(blank=True, null=True)
     show_description = models.BooleanField(default=False)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True)
