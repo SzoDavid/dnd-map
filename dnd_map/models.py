@@ -35,7 +35,6 @@ class Item(models.Model):
         undiscovered(self)
 
     class Meta:
-        unique_together = ('type', 'name')
         ordering = ['name']
 
     def __str__(self):
@@ -46,7 +45,7 @@ class Coord(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='%(class)s_item')
     location = models.ForeignKey(Item, on_delete=models.CASCADE, blank=True, null=True,
                                  related_name='%(class)s_location')
-    coords = models.CharField(max_length=19, blank=True, null=True)
+    coords = models.CharField(max_length=19)
     z_axis = models.IntegerField()
 
     class Meta:

@@ -29,7 +29,7 @@
     {% if coords %}
     <map id="map" name="map">
         {% for coord in coords %}
-        <area shape="rect" coords="{{ coord.coords }}" href="{% url 'dnd_map:details' coord.item.type coord.item.name %}"
+        <area shape="rect" coords="{{ coord.coords }}" href="{% url 'dnd_map:details' coord.item.pk %}"
               title="{{ coord.item.name }}" alt="{{ coord.item.name }}">
         {% endfor %}
     </map>
