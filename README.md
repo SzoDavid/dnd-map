@@ -29,8 +29,10 @@ showing/hiding locations or descriptions
 - [X] About page
 - [X] Include explanations under new and edit forms
 - [X] Remove *kingdom/city/place* structure
-- [ ] Host multiple worlds
-- [ ] Add world creation for users
+- [ ] Add multiple world hosting, and world creator
+- [ ] Add area creator for the maps
+- [ ] Discord bot
+- [ ] Application
 - [ ] Add css
 - [ ] Deploy project
 - [ ] Add documentations
