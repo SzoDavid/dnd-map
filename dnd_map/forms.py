@@ -7,11 +7,12 @@ from dnd_map.models import Item, Coord
 class ItemForm(forms.ModelForm):
     class Meta:
         model = Item
-        fields = ['name', 'pronunciation', 'type', 'discovered', 'description', 'show_description', 'parent', 'map']
+        fields = ['name', 'pronunciation', 'type', 'discovered', 'notes', 'description', 'show_description', 'parent', 'map']
         help_texts = {
             'type': mark_safe('Classification of the item. Examples: <em>kingdom, capital, city, town, forest, '
                               'etc</em>.'),
             'discovered': mark_safe('If discovered is off, people won\'t be able to see this item, only you.'),
+            'notes': mark_safe('Notes for you only'),
             'show_description': mark_safe('If show description is off, people won\'t be able to see this item\'s '
                                           'description only you.'),
             'parent': mark_safe('For example the kingdom this place is located in.'),

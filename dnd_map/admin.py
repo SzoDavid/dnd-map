@@ -11,7 +11,7 @@ class ItemAdmin(admin.ModelAdmin):
         ('Information', {
             'description': 'General information of the item. If <code>discovered</code> is off, only the admin will be '
                            'able to see it',
-            'fields': ('name', 'pronunciation', 'type', 'discovered')
+            'fields': ('name', 'pronunciation', 'type', 'notes', 'discovered')
         }),
         ('Description', {
             'classes': ('collapse',),
