@@ -1,6 +1,7 @@
 import json
 from os import path, remove
 
+from PIL import Image
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
@@ -110,9 +111,19 @@ def new_coord(request, item_pk):
 
         maps = {}
         for item in form.fields['location'].queryset:
-            maps[item.pk] = item.map.url
+            maps.update({
+                item.pk: {
+                    'url': item.map.url,
+                    'width': Image.open(item.map.path).width,
+                }
+            })
 
-        maps[''] = '/static/dnd_map/images/maps/' + config['main_map']['path']
+        maps.update({
+            '': {
+                'url': '/static/dnd_map/images/maps/' + config['main_map']['path'],
+                'width': Image.open(SITE_ROOT + '/../static/dnd_map/images/maps/' + config['main_map']['path']).width,
+            }
+        })
 
         context['form'] = form
         context['maps'] = json.dumps(maps)
@@ -213,9 +224,19 @@ def edit_coord(request, coord_pk):
 
         maps = {}
         for item in form.fields['location'].queryset:
-            maps[item.pk] = item.map.url
+            maps.update({
+                item.pk: {
+                    'url': item.map.url,
+                    'width': Image.open(item.map.path).width,
+                }
+            })
 
-        maps[''] = '/static/dnd_map/images/maps/' + config['main_map']['path']
+        maps.update({
+            '': {
+                'url': '/static/dnd_map/images/maps/' + config['main_map']['path'],
+                'width': Image.open(SITE_ROOT + '/../static/dnd_map/images/maps/' + config['main_map']['path']).width,
+            }
+        })
 
         context['form'] = form
         context['maps'] = json.dumps(maps)

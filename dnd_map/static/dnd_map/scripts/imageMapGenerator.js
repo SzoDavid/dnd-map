@@ -1,19 +1,27 @@
 class ImageMapGenerator {
     constructor(selector, div, maps) {
-        let _img = document.createElement('img')
-        div.appendChild(_img)
+        this.location_selector = selector
+        this.maps = JSON.parse(maps)
+        this.img = document.createElement('img')
+        div.appendChild(this.img)
 
-        const _selector = selector
-        const _maps = JSON.parse(maps)
+        let _this = this
+        this.location_selector.onchange = function () {_this.update()}
+        this.img.onclick = function (event) {_this.onclick(event)}
 
-        const update_method = this.update
-        selector.onchange = function () {update_method(_selector, _img, _maps)}
+        console.log(this.maps)
 
-        selector.onchange()
+        this.update()
     }
 
-    update(selector, img, maps) {
-        console.log(selector.value)
-        img.src = maps[selector.value]
+    onclick(event) {
+        let zoom = this.maps[this.location_selector.value].width / this.img.offsetWidth
+        let x = Math.round((event.pageX - this.img.offsetLeft) * zoom)
+        let y = Math.round((event.pageY - this.img.offsetTop) * zoom)
+        console.log('x: ' + x + ' y: ' + y)
+    }
+
+    update() {
+        this.img.src = this.maps[this.location_selector.value].url
     }
 }
