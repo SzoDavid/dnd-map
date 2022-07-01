@@ -1,6 +1,22 @@
 {% extends "dnd_map/base.html" %}
+{% load static %}
 
 {% block title %}{% if edit %}Edit {% else %}New {%endif%}{% if type == 'coord'%}appearance{% else %}{% if edit %}{{ object.name }}{% else %}location{%endif%}{% endif %} | D&D IMV{% endblock %}
+
+{% if type == 'coord' %}
+{% block scripts %}
+<script src="{% static 'dnd_map/scripts/imageMapGenerator.js' %}"></script>
+<script>
+    window.onload = function () {
+        new ImageMapGenerator(
+            document.getElementById('id_location'),
+            document.getElementById('map_selector'),
+            '{{ maps|safe }}'
+        )
+    }
+</script>
+{% endblock %}
+{% endif %}
 
 {% block body %}
 <form method="post" enctype="multipart/form-data">
@@ -39,5 +55,6 @@
     lower-right corner's coordinates. So the coordinate should be in
     <code>top-left-width,top-left-height,bottom-right-width,bottom-right-height</code> form.</p>
 <p>Anyways an area selector is coming soon! :D</p>
+<div id="map_selector"></div>
 {% endif %}
 {% endblock %}

@@ -101,12 +101,21 @@ def new_coord(request, item_pk):
         context['form'] = form
         return render(request, 'dnd_map/admin/editor.html', context)
     else:
+        config = json.load(open(SITE_ROOT + '/../config.json'))
+
         item = get_object_or_404(Item, pk=item_pk)
         form = CoordForm(instance=Coord(item=item, z_axis=item.depth))
 
         form.fields['location'].queryset = Item.objects.exclude(map='')
 
+        maps = {}
+        for item in form.fields['location'].queryset:
+            maps[item.pk] = item.map.url
+
+        maps[''] = '/static/dnd_map/images/maps/' + config['main_map']['path']
+
         context['form'] = form
+        context['maps'] = json.dumps(maps)
         return render(request, 'dnd_map/admin/editor.html', context)
 
 
@@ -196,9 +205,20 @@ def edit_coord(request, coord_pk):
         context['form'] = form
         return render(request, 'dnd_map/admin/editor.html', context)
     else:
+        config = json.load(open(SITE_ROOT + '/../config.json'))
+
         form = CoordForm(instance=get_object_or_404(Coord, pk=coord_pk))
 
+        form.fields['location'].queryset = Item.objects.exclude(map='')
+
+        maps = {}
+        for item in form.fields['location'].queryset:
+            maps[item.pk] = item.map.url
+
+        maps[''] = '/static/dnd_map/images/maps/' + config['main_map']['path']
+
         context['form'] = form
+        context['maps'] = json.dumps(maps)
         return render(request, 'dnd_map/admin/editor.html', context)
 
 
