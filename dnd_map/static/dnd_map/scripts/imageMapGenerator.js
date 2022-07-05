@@ -66,8 +66,6 @@ class ImageMapGenerator {
 
             this.create_area(`${topLeft.x},${topLeft.y},${bottomRight.x},${bottomRight.y}`)
         }
-
-        console.log('x: ' + x + ' y: ' + y)
     }
 
     update() {
