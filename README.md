@@ -30,6 +30,7 @@ showing/hiding locations or descriptions
 - [X] Include explanations under new and edit forms
 - [X] Remove *kingdom/city/place* structure
 - [X] Add area creator for the maps
+- [ ] Import/Export with json
 - [ ] List view group by type
 - [ ] List view open/close
 - [ ] Search for locations
