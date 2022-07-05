@@ -32,7 +32,7 @@ class CoordForm(forms.ModelForm):
                                   'selected, it will appear on the main map.'),
             'coords': mark_safe('[required] Specify rectangles on location\'s map by its top and bottom pixel '
                                 'coordinates. When you click on that area on the map, it will redirect you on item\'s '
-                                'page.<br><strong>Format:</strong> '
-                                '<code>top-left-width,top-left-height,bottom-right-width,bottom-right-height</code>.'),
-            'z_axis': mark_safe('[required] The biggest z axis will appear on the front, while the lowest at the back.')
+                                'page. You can select it in the Coordinate selector.'),
+            'z_axis': mark_safe('[required] The biggest z axis will appear on the front, while the lowest at the back. '
+                                'If you can\'t see the link, increase this number.')
         }
