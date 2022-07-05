@@ -5,6 +5,7 @@
 
 {% block scripts %}
 <script src="{% static 'dnd_map/scripts/mapResize.js' %}"></script>
+<script src="{% static 'dnd_map/scripts/format.js' %}"></script>
 <script src="{% static 'dnd_map/scripts/generateListView.js' %}"></script>
 <script>
     window.onload = function () {
@@ -55,7 +56,7 @@
         {% if item.parent %}
         <tr>
             <th>Parent:</th>
-            <td><a href="{% url 'dnd_map:details' item.parent.pk %}">{{ item.parent.name }}</td>
+            <td><a href="{% url 'dnd_map:details' item.parent.pk %}">{{ item.parent.name }}</a></td>
         </tr>
         {% endif%}
     </table>

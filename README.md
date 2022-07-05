@@ -22,7 +22,7 @@ Just fill up the database, and it will be ready!
 showing/hiding locations or descriptions
 
 
-## TODO's
+## TO-DO's
 
 - [X] Display information of places
 - [X] Admin interface
@@ -30,12 +30,14 @@ showing/hiding locations or descriptions
 - [X] Include explanations under new and edit forms
 - [X] Remove *kingdom/city/place* structure
 - [X] Add area creator for the maps
+- [X] Search for locations
+- [ ] Create favicon
+- [ ] Make discovered and description toggles async
 - [ ] Import/Export with json
 - [ ] 404 page
 - [ ] Automatic backups 
 - [ ] List view group by type
 - [ ] List view open/close
-- [ ] Search for locations
 - [ ] Move form verification to clean() function
 - [ ] Add multiple world hosting, and world creator
 - [ ] Discord bot
