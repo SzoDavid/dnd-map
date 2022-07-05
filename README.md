@@ -29,6 +29,8 @@ showing/hiding locations or descriptions
 - [X] About page
 - [X] Include explanations under new and edit forms
 - [X] Remove *kingdom/city/place* structure
+- [ ] 404 page
+- [ ] Automatic backups 
 - [ ] List view group by type
 - [ ] List view open/close
 - [ ] Search for locations

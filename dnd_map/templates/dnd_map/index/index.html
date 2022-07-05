@@ -4,11 +4,13 @@
 {% block title %}{{ world_name }} | D&D IMV{% endblock %}
 
 {% block scripts %}
+{% if is_map_set and coords %}
 <script src="{% static 'dnd_map/scripts/mapResize.js' %}"></script>
+{% endif %}
 <script src="{% static 'dnd_map/scripts/generateListView.js' %}"></script>
 <script>
     window.onload = function () {
-        {% if is_map_set %}
+        {% if is_map_set and coords %}
         new ImageMap(
             document.getElementById('map'),
             document.getElementById('img'),
