@@ -58,8 +58,6 @@ def items(request, item_pk):
 
 def search(request):
     if request.method == 'POST':
-        print(request.POST)
-
         search_value = request.POST['search']
 
         if request.user.is_authenticated:
