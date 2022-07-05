@@ -5,12 +5,16 @@
 
 {% if type == 'coord' %}
 {% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/es6-promise/dist/es6-promise.auto.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/imagemapster@1.5.4/dist/jquery.imagemapster.min.js"></script>
 <script src="{% static 'dnd_map/scripts/imageMapGenerator.js' %}"></script>
 <script>
     window.onload = function () {
         new ImageMapGenerator(
             document.getElementById('id_location'),
             document.getElementById('map_selector'),
+            document.getElementById('id_coords'),
             '{{ maps|safe }}'
         )
     }
@@ -50,11 +54,12 @@
     <input type="submit" value="Save">
 </form>
 {% if type == 'coord' %}
-<p>To get the coordinates open the map in an image editor where it displays the cursors coordinates (MS Paint, GIMP),
-    move your cursor to the upper-left corner of the area, type down the coordinates, then after a comma write down the
-    lower-right corner's coordinates. So the coordinate should be in
-    <code>top-left-width,top-left-height,bottom-right-width,bottom-right-height</code> form.</p>
-<p>Anyways an area selector is coming soon! :D</p>
-<div id="map_selector"></div>
+<div>
+    <div>
+        <h1>Coordinate selector</h1>
+        <p>Click on the two corners of the rectangle, which covers the place on the map, or its label.</p>
+    </div>
+    <div id="map_selector"></div>
+</div>
 {% endif %}
 {% endblock %}

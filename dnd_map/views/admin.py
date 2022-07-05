@@ -111,19 +111,25 @@ def new_coord(request, item_pk):
 
         maps = {}
         for item in form.fields['location'].queryset:
+            img = Image.open(item.map.path)
             maps.update({
                 item.pk: {
                     'url': item.map.url,
-                    'width': Image.open(item.map.path).width,
+                    'width': img.width,
+                    'height': img.height,
                 }
             })
+            img.close()
 
+        img = Image.open(SITE_ROOT + '/../static/dnd_map/images/maps/' + config['main_map']['path'])
         maps.update({
             '': {
                 'url': '/static/dnd_map/images/maps/' + config['main_map']['path'],
-                'width': Image.open(SITE_ROOT + '/../static/dnd_map/images/maps/' + config['main_map']['path']).width,
-            }
+                'width': img.width,
+                'height': img.height,
+            },
         })
+        img.close()
 
         context['form'] = form
         context['maps'] = json.dumps(maps)
@@ -224,19 +230,25 @@ def edit_coord(request, coord_pk):
 
         maps = {}
         for item in form.fields['location'].queryset:
+            img = Image.open(item.map.path)
             maps.update({
                 item.pk: {
                     'url': item.map.url,
-                    'width': Image.open(item.map.path).width,
+                    'width': img.width,
+                    'height': img.height,
                 }
             })
+            img.close()
 
+        img = Image.open(SITE_ROOT + '/../static/dnd_map/images/maps/' + config['main_map']['path'])
         maps.update({
             '': {
                 'url': '/static/dnd_map/images/maps/' + config['main_map']['path'],
-                'width': Image.open(SITE_ROOT + '/../static/dnd_map/images/maps/' + config['main_map']['path']).width,
-            }
+                'width': img.width,
+                'height': img.height,
+            },
         })
+        img.close()
 
         context['form'] = form
         context['maps'] = json.dumps(maps)
