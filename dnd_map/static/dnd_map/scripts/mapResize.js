@@ -1,28 +1,32 @@
-let ImageMap = function (map, img, previousWidth) {
-    let areas = map.getElementsByTagName('area'),
-        len = areas.length,
-        coords = []
+class ImageMap {
+    constructor(map, img, previousWidth) {
+        this.img = img
+        this.previousWidth = previousWidth
+        this.areas =map.getElementsByTagName('area')
+        this.len = this.areas.length
+        this.coords = []
 
-    for (let n = 0; n < len; n++) {
-        coords[n] = areas[n].coords.split(',')
+        for (let n = 0; n < this.len; n++) {
+            this.coords[n] = this.areas[n].coords.split(',')
+        }
+        
+        window.onresize = this.resize
     }
 
-    this.resize = function () {
-        let clen, x = img.offsetWidth / previousWidth
+    resize() {
+        let clen, x = this.img.offsetWidth / this.previousWidth
 
-        for (let n = 0; n < len; n++) {
-            clen = coords[n].length
+        for (let n = 0; n < this.len; n++) {
+            clen = this.coords[n].length
 
             for (let m = 0; m < clen; m++) {
-                coords[n][m] *= x
+                this.coords[n][m] *= x
             }
 
-            areas[n].coords = coords[n].join(',')
+            this.areas[n].coords = this.coords[n].join(',')
         }
 
-        previousWidth = document.body.clientWidth
+        this.previousWidth = document.body.clientWidth
         return true
     }
-
-    window.onresize = this.resize
 }

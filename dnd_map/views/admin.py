@@ -1,6 +1,7 @@
 import json
 from os import path, remove
 
+from PIL import Image
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
@@ -101,12 +102,37 @@ def new_coord(request, item_pk):
         context['form'] = form
         return render(request, 'dnd_map/admin/editor.html', context)
     else:
+        config = json.load(open(SITE_ROOT + '/../config.json'))
+
         item = get_object_or_404(Item, pk=item_pk)
         form = CoordForm(instance=Coord(item=item, z_axis=item.depth))
 
         form.fields['location'].queryset = Item.objects.exclude(map='')
 
+        maps = {}
+        for item in form.fields['location'].queryset:
+            img = Image.open(item.map.path)
+            maps.update({
+                item.pk: {
+                    'url': item.map.url,
+                    'width': img.width,
+                    'height': img.height,
+                }
+            })
+            img.close()
+
+        img = Image.open(SITE_ROOT + '/../static/dnd_map/images/maps/' + config['main_map']['path'])
+        maps.update({
+            '': {
+                'url': '/static/dnd_map/images/maps/' + config['main_map']['path'],
+                'width': img.width,
+                'height': img.height,
+            },
+        })
+        img.close()
+
         context['form'] = form
+        context['maps'] = json.dumps(maps)
         return render(request, 'dnd_map/admin/editor.html', context)
 
 
@@ -196,9 +222,36 @@ def edit_coord(request, coord_pk):
         context['form'] = form
         return render(request, 'dnd_map/admin/editor.html', context)
     else:
+        config = json.load(open(SITE_ROOT + '/../config.json'))
+
         form = CoordForm(instance=get_object_or_404(Coord, pk=coord_pk))
 
+        form.fields['location'].queryset = Item.objects.exclude(map='')
+
+        maps = {}
+        for item in form.fields['location'].queryset:
+            img = Image.open(item.map.path)
+            maps.update({
+                item.pk: {
+                    'url': item.map.url,
+                    'width': img.width,
+                    'height': img.height,
+                }
+            })
+            img.close()
+
+        img = Image.open(SITE_ROOT + '/../static/dnd_map/images/maps/' + config['main_map']['path'])
+        maps.update({
+            '': {
+                'url': '/static/dnd_map/images/maps/' + config['main_map']['path'],
+                'width': img.width,
+                'height': img.height,
+            },
+        })
+        img.close()
+
         context['form'] = form
+        context['maps'] = json.dumps(maps)
         return render(request, 'dnd_map/admin/editor.html', context)
 
 

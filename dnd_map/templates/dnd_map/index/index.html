@@ -9,7 +9,8 @@
 <script>
     window.onload = function () {
         {% if is_map_set %}
-        new ImageMap(document.getElementById('map'),
+        new ImageMap(
+            document.getElementById('map'),
             document.getElementById('img'),
             parseInt('{{ map_original_width }}')).resize()
         {% endif %}
