@@ -46,7 +46,6 @@ function searchItems(value, div) {
             })
 
             div.appendChild(result_list)
-            console.log(result)
         }
     })
 }
