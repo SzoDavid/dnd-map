@@ -30,7 +30,7 @@ showing/hiding locations or descriptions
 - [X] Include explanations under new and edit forms
 - [X] Add area creator for the maps
 - [X] Search for locations
-- [ ] Create favicon
+- [X] Create favicon
 - List view improvements
     - [ ] List view group by type
     - [ ] List view open/close
