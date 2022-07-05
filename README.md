@@ -28,16 +28,16 @@ showing/hiding locations or descriptions
 - [X] Admin interface
 - [X] About page
 - [X] Include explanations under new and edit forms
-- [X] Remove *kingdom/city/place* structure
 - [X] Add area creator for the maps
 - [X] Search for locations
 - [ ] Create favicon
-- [ ] Make discovered and description toggles async
+- List view improvements
+    - [ ] List view group by type
+    - [ ] List view open/close
+    - [ ] Make discovered and description toggles async
 - [ ] Import/Export with json
 - [ ] 404 page
 - [ ] Automatic backups 
-- [ ] List view group by type
-- [ ] List view open/close
 - [ ] Move form verification to clean() function
 - [ ] Add multiple world hosting, and world creator
 - [ ] Discord bot
