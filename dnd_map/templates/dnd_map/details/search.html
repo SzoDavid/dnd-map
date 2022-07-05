@@ -1,0 +1,21 @@
+{% extends "dnd_map/base.html" %}
+{% load static %}
+
+{% block title %}Search | D&D IMV{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
+<script src="{% static 'dnd_map/scripts/format.js' %}"></script>
+<script src="{% static 'dnd_map/scripts/searchItems.js' %}"></script>
+{% endblock %}
+
+{% block body %}
+<h1>Search</h1>
+
+{% csrf_token %}
+<label for="search">Search: </label>
+<input id="search" type="text">
+<button onclick="searchItems(document.getElementById('search').value, document.getElementById('results'))">Search</button>
+<div id="results"></div>
+{% endblock %}

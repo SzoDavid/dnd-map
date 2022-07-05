@@ -12,6 +12,7 @@ urlpatterns = [
                                                redirect_authenticated_user=True), name='login'),
     path('logout', views.logout_user, name='logout'),
     path('new', views.new, name='new'),
+    path('search', views.search, name='search'),
     path('<int:item_pk>', views.items, name='details'),
     path('<int:item_pk>/new', views.new, name='new'),
     path('<int:item_pk>/edit', views.edit, name='edit'),

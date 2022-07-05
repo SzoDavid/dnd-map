@@ -5,13 +5,6 @@ const li = '<li><table class="item"><tr><td><a href="{0}">{1}</a></td></tr>{2}</
 
 let max_depth = null
 
-String.prototype.format = function () {
-    let args = arguments
-    return this.replace(/{(\d+)}/g, function (match, index) {
-        return typeof args[index] == 'undefined' ? match : args[index]
-    })
-}
-
 function generateList(items, auth) {
     let result = ''
 
