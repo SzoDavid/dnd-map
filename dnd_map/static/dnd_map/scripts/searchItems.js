@@ -10,7 +10,6 @@ function searchItems(value, div) {
     if (value === '')
         return
 
-    console.log(value)
 
     $.ajax({
         url: '#',
