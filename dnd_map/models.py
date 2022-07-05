@@ -24,7 +24,7 @@ class Item(models.Model):
     description = models.TextField(blank=True, null=True)
     show_description = models.BooleanField(default=False)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True)
-    map = models.ImageField(upload_to='maps/kingdoms', blank=True, null=True)
+    map = models.ImageField(upload_to='maps', blank=True, null=True)
     discovered = models.BooleanField(default=False)
     depth = models.IntegerField(default=0)
 

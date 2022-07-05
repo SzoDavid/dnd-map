@@ -1,5 +1,5 @@
 import json
-from os import path, remove
+import os
 
 from PIL import Image
 from django.contrib.auth import logout
@@ -12,7 +12,7 @@ from dnd_map.forms import ItemForm, CoordForm
 from dnd_map.models import Item, Coord
 from dnd_map.views.functions import calculate_depth, has_loop, check_leaf_depth
 
-SITE_ROOT = path.dirname(path.realpath(__file__))
+SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 
 
 def logout_user(request):
@@ -179,9 +179,9 @@ def edit(request, item_pk):
                 if request.POST['path'] != '':
                     if bool(form.instance.map):
                         if request.POST['path'] != form.instance.map.path:
-                            remove(request.POST['path'])
+                            os.remove(request.POST['path'])
                         else:
-                            remove(request.POST['path'])
+                            os.remove(request.POST['path'])
 
                 result = form.save(commit=False)
                 result.depth = depth
@@ -255,10 +255,14 @@ def edit_coord(request, coord_pk):
         return render(request, 'dnd_map/admin/editor.html', context)
 
 
-@login_required(login_url='/dnd/login/')
 def remove(request, object_type, object_pk, redirect):
     if object_type == 'item':
-        get_object_or_404(Item, pk=object_pk).delete()
+        obj = get_object_or_404(Item, pk=object_pk)
+
+        if bool(obj.map):
+            os.remove(obj.map.path)
+
+        obj.delete()
     else:
         get_object_or_404(Coord, pk=object_pk).delete()
 
