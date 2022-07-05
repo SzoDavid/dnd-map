@@ -30,8 +30,6 @@ class ImageMapGenerator {
         this.location_selector.onchange = function () {_this.update()}
         this.img.onclick = function (event) {_this.onclick(event)}
 
-        console.log(this.maps)
-
         this.update()
 
         this.coords_field = coords_field
