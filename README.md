@@ -32,8 +32,8 @@ showing/hiding locations or descriptions
 - [X] Search for locations
 - [X] Create favicon
 - List view improvements
+    - [X] List view open/close
     - [ ] List view group by type
-    - [ ] List view open/close
     - [ ] Make discovered and description toggles async
 - [ ] Import/Export with json
 - [ ] 404 page
