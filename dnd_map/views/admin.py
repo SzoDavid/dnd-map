@@ -23,7 +23,12 @@ def logout_user(request):
 @login_required(login_url='/dnd/login/')
 def toggle_description(request, item_pk):
     item = get_object_or_404(Item, pk=item_pk)
-    item.show_description = not item.show_description
+
+    if request.method == 'POST':
+        item.show_description = request.POST['value']
+    else:
+        item.show_description = not item.show_description
+
     item.save()
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
@@ -33,10 +38,16 @@ def toggle_description(request, item_pk):
 def toggle_discovered(request, item_pk):
     item = get_object_or_404(Item, pk=item_pk)
 
-    if item.discovered:
-        item.set_undiscovered()
+    if request.method == 'POST':
+        if request.POST['value']:
+            item.set_discovered()
+        else:
+            item.set_undiscovered()
     else:
-        item.set_discovered()
+        if item.discovered:
+            item.set_undiscovered()
+        else:
+            item.set_discovered()
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
