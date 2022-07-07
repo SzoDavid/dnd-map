@@ -42,13 +42,14 @@ def items(request, item_pk):
                                           not request.user.is_authenticated,
                                           config['max_item_display_depth'] - 1))
 
-    item_list.insert(0, {'max_depth': config['max_item_display_depth']})
+    data = {'max_depth': config['max_item_display_depth'],
+            'items': item_list}
 
     context = {
         'item': item,
         'map_original_width': original_width,
         'world_name': config['main_map']['world_name'],
-        'items': json.dumps(item_list),
+        'items': json.dumps(data),
         'coords': coords,
         'appearances': appearances,
     }

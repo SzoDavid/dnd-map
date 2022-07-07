@@ -14,10 +14,17 @@ function generateItem(item, auth) {
     }
 
     if (auth) {
-        table.innerHTML += `<tr><td><a class="toggle${item['discovered'] ? '' : ' off'}" ` +
+        let admin = `<tr><td><a class="toggle${item['discovered'] ? '' : ' off'}" ` +
             `href="${item['toggle_discovered']}">⚑</a><a class="toggle${item['description'] ? '' : ' off'}" ` +
-            `href="${item['toggle_description']}">☰</a><a class="button" href="${item['edit']}">✎</a><a ` +
-            `class="button" href="${item['add_child']}">Add</a></td></tr>`
+            `href="${item['toggle_description']}">☰</a><a class="button" href="${item['edit']}">✎</a>`
+
+        if (item['depth'] < max_depth - 1) {
+            admin += `<a class="button" href="${item['add_child']}">Add</a>`
+        }
+
+        admin += '</td></tr>'
+
+        table.innerHTML += admin
     }
 
     if (item['children'].length !== 0) {
@@ -50,17 +57,17 @@ function collapse(obj) {
 
 function populateListView(json, auth, add_div_url) {
     const div = document.getElementById('list_view')
-    const items = JSON.parse(json)
+    const data = JSON.parse(json)
+    max_depth = data['max_depth']
+    const items = data['items']
+
+    console.log(data)
 
     items.forEach(function (item) {
-        if (max_depth === null) {
-            max_depth = item['max_depth']
-        } else {
-            let div_item = document.createElement('div')
-            div_item.classList.add('list_column')
-            div_item.append(generateItem(item, auth))
-            div.append(div_item)
-        }
+        let div_item = document.createElement('div')
+        div_item.classList.add('list_column')
+        div_item.append(generateItem(item, auth))
+        div.append(div_item)
     })
 
     if (auth) {

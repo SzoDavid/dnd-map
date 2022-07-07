@@ -37,14 +37,15 @@ def index(request):
                                       not request.user.is_authenticated,
                                       config['max_item_display_depth'] - 1))
 
-    items.insert(0, {'max_depth': config['max_item_display_depth']})
+    data = {'max_depth': config['max_item_display_depth'],
+            'items': items}
 
     context = {
         'is_map_set': is_map_set,
         'map_original_width': original_width,
         'world_name': config['main_map']['world_name'],
         'map_path': '/dnd_map/images/maps/' + config['main_map']['path'],
-        'items': json.dumps(items),
+        'items': json.dumps(data),
         'coords': coords,
     }
 
