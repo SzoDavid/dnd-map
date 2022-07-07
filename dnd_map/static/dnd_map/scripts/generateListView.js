@@ -61,8 +61,6 @@ function populateListView(json, auth, add_div_url) {
     max_depth = data['max_depth']
     const items = data['items']
 
-    console.log(data)
-
     items.forEach(function (item) {
         let div_item = document.createElement('div')
         div_item.classList.add('list_column')
