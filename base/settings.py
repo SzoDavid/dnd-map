@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'dnd_map.apps.DndMapConfig',
+    'dnd_imh.apps.DndImhConfig',
 ]
 
 MIDDLEWARE = [
