@@ -7,8 +7,10 @@
 {% if is_map_set and coords %}
 <script src="{% static 'dnd_map/scripts/mapResize.js' %}"></script>
 {% endif %}
-<script src="{% static 'dnd_map/scripts/format.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
 <script src="{% static 'dnd_map/scripts/generateListView.js' %}"></script>
+<script src="{% static 'dnd_map/scripts/toggleButtons.js' %}"></script>
 <script>
     window.onload = function () {
         {% if is_map_set and coords %}

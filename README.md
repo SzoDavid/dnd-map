@@ -33,11 +33,11 @@ showing/hiding locations or descriptions
 - [X] Create favicon
 - List view improvements
     - [X] List view open/close
+    - [X] Make discovered and description toggles async
     - [ ] List view group by type - When world creator is done
-    - [ ] Make discovered and description toggles async
-- [ ] Import/Export with json
+- [ ] Import/Export with json - When world creator is done
 - [ ] 404 page
-- [ ] Automatic backups 
+- [ ] Automatic backups - When world creator is done
 - [ ] Move form verification to clean() function
 - [ ] Add multiple world hosting, and world creator
 - [ ] Discord bot
