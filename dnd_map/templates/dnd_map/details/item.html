@@ -4,9 +4,11 @@
 {% block title %}{{ item.name }} | D&D IMV{% endblock %}
 
 {% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
 <script src="{% static 'dnd_map/scripts/mapResize.js' %}"></script>
-<script src="{% static 'dnd_map/scripts/format.js' %}"></script>
 <script src="{% static 'dnd_map/scripts/generateListView.js' %}"></script>
+<script src="{% static 'dnd_map/scripts/toggleButtons.js' %}"></script>
 <script>
     window.onload = function () {
         {% if is_map_set %}
@@ -26,10 +28,10 @@
 <div id="information">
     <h1>
         {% if user.is_authenticated %}
-        <a class="toggle {% if not item.discovered %} off {% endif %}" href="{% url 'dnd_map:toggle_discovered' item.pk %}">
+        <a class="toggle {% if not item.discovered %} off {% endif %}" onclick="toggle_value(this, '{% url 'dnd_map:toggle_discovered' item.pk %}')">
             ⚑
         </a>
-        <a class="toggle {% if not item.show_description %} off {% endif %}" href="{% url 'dnd_map:toggle_description' item.pk %}">
+        <a class="toggle {% if not item.show_description %} off {% endif %}" onclick="toggle_value(this, '{% url 'dnd_map:toggle_description' item.pk %}')">
             ☰
         </a>
         <a class="button" href="{% url 'dnd_map:edit' item.pk %}">✎</a>

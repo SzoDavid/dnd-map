@@ -15,8 +15,10 @@ function generateItem(item, auth) {
 
     if (auth) {
         let admin = `<tr><td><a class="toggle${item['discovered'] ? '' : ' off'}" ` +
-            `href="${item['toggle_discovered']}">⚑</a><a class="toggle${item['description'] ? '' : ' off'}" ` +
-            `href="${item['toggle_description']}">☰</a><a class="button" href="${item['edit']}">✎</a>`
+            `onclick="toggle_value(this, '${item['toggle_discovered']}')">⚑</a><a ` +
+            `class="toggle${item['description'] ? '' : ' off'}" ` +
+            `onclick="toggle_value(this, '${item['toggle_description']}')">☰</a><a class="button" ` +
+            `href="${item['edit']}">✎</a>`
 
         if (item['depth'] < max_depth - 1) {
             admin += `<a class="button" href="${item['add_child']}">Add</a>`

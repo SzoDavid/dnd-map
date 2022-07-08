@@ -18,7 +18,6 @@ function searchItems(value, div) {
             search: value
         },
         headers: {
-            search: value,
             'X-CSRFToken': csrf_token
         },
         dataType: 'json',

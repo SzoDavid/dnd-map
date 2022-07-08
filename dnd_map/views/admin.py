@@ -4,7 +4,7 @@ import os
 from PIL import Image
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 
@@ -25,10 +25,11 @@ def toggle_description(request, item_pk):
     item = get_object_or_404(Item, pk=item_pk)
 
     if request.method == 'POST':
-        item.show_description = request.POST['value']
-    else:
-        item.show_description = not item.show_description
+        item.show_description = request.POST['value'] == 'true'
+        item.save()
+        return HttpResponse(status=204)
 
+    item.show_description = not item.show_description
     item.save()
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
@@ -39,15 +40,17 @@ def toggle_discovered(request, item_pk):
     item = get_object_or_404(Item, pk=item_pk)
 
     if request.method == 'POST':
-        if request.POST['value']:
+        if request.POST['value'] == 'true':
             item.set_discovered()
         else:
             item.set_undiscovered()
+
+        return HttpResponse(status=204)
+
+    if item.discovered:
+        item.set_undiscovered()
     else:
-        if item.discovered:
-            item.set_undiscovered()
-        else:
-            item.set_discovered()
+        item.set_discovered()
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
