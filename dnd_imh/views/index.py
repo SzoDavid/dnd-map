@@ -1,5 +1,5 @@
-from django.http import HttpResponse
+from django.shortcuts import render
 
 
 def index(request):
-    return HttpResponse('yay')
+    return render(request, 'dnd_imh/index/index.html')

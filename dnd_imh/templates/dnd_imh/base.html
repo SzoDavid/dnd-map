@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'dnd_imh/fonts/luminari/stylesheet.css' %}">
+    <link rel="stylesheet" href="{% static 'dnd_imh/styles/style.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'dnd_map/images/favicon/favicon.ico' %}">
+
+    {% block scripts %}{% endblock %}
+
+    <title>{% block title %}D&D Interactive Map Hub{% endblock %}</title>
+</head>
+<body>
+<div class="menu">
+    <img src="{% static 'dnd_map/images/favicon/favicon.ico' %}" alt="logo" height="45" width="45">
+    <a href="{% url 'dnd_imh:index' %}">D&D Interactive Map Hub</a>
+</div>
+{% block body%}{% endblock %}
+</body>
+</html>
