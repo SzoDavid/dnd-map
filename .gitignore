@@ -6,8 +6,10 @@ db.sqlite3
 .idea
 config.json
 dnd_map/migrations/*
+dnd_imh/migrations/*
 dnd_map/static/dnd_map/images/maps/*
 media
 
 !dnd_map/migrations/__init__.py
+!dnd_imh/migrations/__init__.py
 !dnd_map/static/dnd_map/images/maps/.place_your_main_map_here

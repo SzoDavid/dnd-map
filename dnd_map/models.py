@@ -1,5 +1,7 @@
 from django.db import models
 
+from dnd_imh.models import World
+
 
 def discovered(item):
     if item.parent is not None:
@@ -27,6 +29,7 @@ class Item(models.Model):
     map = models.ImageField(upload_to='maps', blank=True, null=True)
     discovered = models.BooleanField(default=False)
     depth = models.IntegerField(default=0)
+    world = models.ForeignKey(World, on_delete=models.CASCADE)
 
     def set_discovered(self):
         discovered(self)

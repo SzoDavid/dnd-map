@@ -4,14 +4,14 @@ from .models import Item, Coord
 
 
 class ItemAdmin(admin.ModelAdmin):
-    search_fields = ['name', 'type', 'parent']
-    ordering = ['parent', 'type', 'name']
+    search_fields = ['world', 'name', 'type', 'parent']
+    ordering = ['world', 'parent', 'type', 'name']
 
     fieldsets = [
         ('Information', {
             'description': 'General information of the item. If <code>discovered</code> is off, only the admin will be '
                            'able to see it',
-            'fields': ('name', 'pronunciation', 'type', 'notes', 'discovered')
+            'fields': ('name', 'pronunciation', 'type', 'notes', 'discovered', 'world')
         }),
         ('Description', {
             'classes': ('collapse',),
@@ -25,7 +25,7 @@ class ItemAdmin(admin.ModelAdmin):
         })
     ]
 
-    list_display = ('name', 'parent', 'type', 'discovered', 'show_description')
+    list_display = ('name', 'parent', 'type', 'world', 'discovered', 'show_description')
 
 
 class CoordAdmin(admin.ModelAdmin):
