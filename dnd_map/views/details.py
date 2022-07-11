@@ -5,18 +5,16 @@ from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 
 from PIL import Image
-from os import path
 
 from django.urls import reverse
 
+from dnd_imh.models import World
 from dnd_map.models import Item, Coord
 from dnd_map.views import create_item_tree
 
-SITE_ROOT = path.dirname(path.realpath(__file__))
 
-
-def items(request, item_pk):
-    config = json.load(open(SITE_ROOT + '/../config.json'))
+def items(request, world_pk, item_pk):
+    world = get_object_or_404(World, pk=world_pk)
 
     item = get_object_or_404(Item, pk=item_pk)
 
@@ -38,17 +36,17 @@ def items(request, item_pk):
         appearances = Coord.objects.filter(item=item, location__discovered=True)
 
     for item_root in item_roots:
-        item_list.append(create_item_tree(item_root,
+        item_list.append(create_item_tree(world, item_root,
                                           not request.user.is_authenticated,
-                                          config['max_item_display_depth'] - 1))
+                                          world.max_item_tree_display_depth - 1))
 
-    data = {'max_depth': config['max_item_display_depth'],
+    data = {'max_depth': world.max_item_tree_display_depth,
             'items': item_list}
 
     context = {
+        'world': world,
         'item': item,
         'map_original_width': original_width,
-        'world_name': config['main_map']['world_name'],
         'items': json.dumps(data),
         'coords': coords,
         'appearances': appearances,
@@ -57,15 +55,16 @@ def items(request, item_pk):
     return render(request, 'dnd_map/details/item.html', context)
 
 
-def search(request):
+def search(request, world_pk):
     if request.method == 'POST':
         search_value = request.POST['search']
 
         if request.user.is_authenticated:
-            item_query = Item.objects.filter(Q(name__icontains=search_value) | Q(type__icontains=search_value))
+            item_query = Item.objects.filter(Q(name__icontains=search_value, world__pk=world_pk) |
+                                             Q(type__icontains=search_value, world__pk=world_pk))
         else:
-            item_query = Item.objects.filter(Q(name__icontains=search_value, discovered=True) |
-                                             Q(type__icontains=search_value, discovered=True))
+            item_query = Item.objects.filter(Q(name__icontains=search_value, world__pk=world_pk, discovered=True) |
+                                             Q(type__icontains=search_value, world__pk=world_pk, discovered=True))
 
         result = {
             'auth': request.user.is_authenticated,
@@ -75,14 +74,14 @@ def search(request):
             result['query'].append({
                 'name': item.name,
                 'type': item.type,
-                'details': reverse('dnd_map:details', args=(item.pk,)),
-                'edit': reverse('dnd_map:edit', args=(item.pk,)),
+                'details': reverse('dnd_map:details', args=(world_pk, item.pk)),
+                'edit': reverse('dnd_map:edit', args=(world_pk, item.pk)),
                 'discovered': item.discovered,
-                'toggle_discovered': reverse('dnd_map:toggle_discovered', args=(item.pk,)),
+                'toggle_discovered': reverse('dnd_map:toggle_discovered', args=(world_pk, item.pk)),
                 'description': item.show_description,
-                'toggle_description': reverse('dnd_map:toggle_description', args=(item.pk,)),
-                'add_child': reverse('dnd_map:new', args=(item.pk,)),
+                'toggle_description': reverse('dnd_map:toggle_description', args=(world_pk, item.pk)),
+                'add_child': reverse('dnd_map:new', args=(world_pk, item.pk)),
             })
         return JsonResponse(result)
     else:
-        return render(request, 'dnd_map/details/search.html')
+        return render(request, 'dnd_map/details/search.html', {'world': get_object_or_404(World, pk=world_pk)})

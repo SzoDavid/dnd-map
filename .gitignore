@@ -4,7 +4,6 @@
 __pycache__
 db.sqlite3
 .idea
-config.json
 dnd_map/migrations/*
 dnd_imh/migrations/*
 dnd_map/static/dnd_map/images/maps/*

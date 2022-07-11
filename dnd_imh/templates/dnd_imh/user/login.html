@@ -1,0 +1,18 @@
+{% extends "dnd_imh/base.html" %}
+
+{% block body %}
+<div class="content">
+    <form method="post" action="{% url 'dnd_imh:login' %}">
+        {% csrf_token %}
+        {{ form.username.label_tag }}<br>
+        {{ form.username }}<br>
+        {{ form.password.label_tag }}<br>
+        {{ form.password }}<br>
+        <input type="submit" value="Login">
+    </form>
+
+    {% if form.errors %}
+    <p>Your username and password didn't match. Please try again!</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -21,10 +21,14 @@ body {
 .menu a {
     color: white;
     text-decoration: none;
-    font-size: 32px;
+    font-size: 24px;
     font-family: "luminari", sans-serif;
     margin-left: 15px;
     text-shadow: 1px 1px black;
+}
+
+.menu .title {
+    font-size: 32px;
 }
 
 h1, h2 {

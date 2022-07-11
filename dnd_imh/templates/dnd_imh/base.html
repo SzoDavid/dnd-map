@@ -13,8 +13,15 @@
 </head>
 <body>
 <div class="menu">
-    <img src="{% static 'dnd_map/images/favicon/favicon.ico' %}" alt="logo" height="45" width="45">
-    <a href="{% url 'dnd_imh:index' %}">D&D Interactive Map Hub</a>
+    <a class="title" href="{% url 'dnd_imh:index' %}">
+        <img src="{% static 'dnd_map/images/favicon/favicon.ico' %}" alt="logo" height="45" width="45"> D&D Interactive Map Hub
+    </a>
+    <a href="{% url 'dnd_imh:about' %}">About</a>
+    {% if user.is_authenticated %}
+    <a href="{% url 'dnd_imh:logout' %}">Logout</a>
+    {% else %}
+    <a href="{% url 'dnd_imh:login' %}">Login</a>
+    {% endif %}
 </div>
 {% block body%}{% endblock %}
 </body>

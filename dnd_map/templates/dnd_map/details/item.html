@@ -18,7 +18,7 @@
         {% endif %}
 
         {% if items %}
-        populateListView('{{ items | safe }}', {{ user.is_authenticated | yesno:"true,false" }}, "{% url 'dnd_map:new' item.pk %}")
+        populateListView('{{ items | safe }}', {{ user.is_authenticated | yesno:"true,false" }}, "{% url 'dnd_map:new' world.pk item.pk %}")
         {% endif %}
     }
 </script>
@@ -28,13 +28,13 @@
 <div id="information">
     <h1>
         {% if user.is_authenticated %}
-        <a class="toggle {% if not item.discovered %} off {% endif %}" onclick="toggle_value(this, '{% url 'dnd_map:toggle_discovered' item.pk %}')">
+        <a class="toggle {% if not item.discovered %} off {% endif %}" onclick="toggle_value(this, '{% url 'dnd_map:toggle_discovered' world.pk item.pk %}')">
             ⚑
         </a>
-        <a class="toggle {% if not item.show_description %} off {% endif %}" onclick="toggle_value(this, '{% url 'dnd_map:toggle_description' item.pk %}')">
+        <a class="toggle {% if not item.show_description %} off {% endif %}" onclick="toggle_value(this, '{% url 'dnd_map:toggle_description' world.pk item.pk %}')">
             ☰
         </a>
-        <a class="button" href="{% url 'dnd_map:edit' item.pk %}">✎</a>
+        <a class="button" href="{% url 'dnd_map:edit' world.pk item.pk %}">✎</a>
         {% endif %}
         {{ item.name }}
     </h1>
@@ -58,7 +58,7 @@
         {% if item.parent %}
         <tr>
             <th>Parent:</th>
-            <td><a href="{% url 'dnd_map:details' item.parent.pk %}">{{ item.parent.name }}</a></td>
+            <td><a href="{% url 'dnd_map:details' world.pk item.parent.pk %}">{{ item.parent.name }}</a></td>
         </tr>
         {% endif%}
     </table>
@@ -84,7 +84,7 @@
     {% if coords %}
     <map id="map" name="map">
         {% for coord in coords %}
-        <area shape="rect" coords="{{ coord.coords }}" href="{% url 'dnd_map:details' coord.item.pk %}"
+        <area shape="rect" coords="{{ coord.coords }}" href="{% url 'dnd_map:details' world.pk coord.item.pk %}"
               title="{{ coord.item.name }}" alt="{{ coord.item.name }}">
         {% endfor %}
     </map>
@@ -104,19 +104,19 @@
             {% for appearance in appearances %}
             <li>
                 {% if user.is_authenticated %}
-                <a class="button" href="{% url 'dnd_map:edit_coord' appearance.pk %}">✎</a>
+                <a class="button" href="{% url 'dnd_map:edit_coord' world.pk appearance.pk %}">✎</a>
                 {% endif %}
                 {% if appearance.location %}
-                <a href="{% url 'dnd_map:item' appearance.location.type appearance.location.name %}">{{ appearance.location.name }}</a>
+                <a href="{% url 'dnd_map:item' world.pk appearance.location.type appearance.location.name %}">{{ appearance.location.name }}</a>
                 {% else %}
-                <a href="{% url 'dnd_map:index' %}">{{ world_name }}</a>
+                <a href="{% url 'dnd_map:index' world.pk %}">{{ world.name }}</a>
                 {% endif %}
             </li>
             {% endfor %}
             {% endif%}
             {% if user.is_authenticated %}
             <li>
-                <a class="button" href="{% url 'dnd_map:new_coord' item.pk %}">+</a>
+                <a class="button" href="{% url 'dnd_map:new_coord' world.pk item.pk %}">+</a>
             </li>
             {% endif %}
         </ul>

@@ -3,8 +3,8 @@
 
 {% block title %}{% if edit %}Edit {% else %}New {%endif%}{% if type == 'coord'%}appearance{% else %}{% if edit %}{{ object.name }}{% else %}location{%endif%}{% endif %} | D&D IMV{% endblock %}
 
-{% if type == 'coord' %}
 {% block scripts %}
+{% if type == 'coord' %}
 <script src="https://cdn.jsdelivr.net/npm/es6-promise/dist/es6-promise.auto.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/imagemapster@1.5.4/dist/jquery.imagemapster.min.js"></script>
@@ -19,8 +19,14 @@
         )
     }
 </script>
-{% endblock %}
+{% else %}
+<script>
+    window.onload = function () {
+        document.getElementById('id_world').parentNode.parentNode.hidden = true
+    }
+</script>
 {% endif %}
+{% endblock %}
 
 {% block body %}
 <form method="post" enctype="multipart/form-data">
@@ -48,7 +54,7 @@
         {% endif %}
     </label>
     {% if edit %}
-    <a href="{% url 'dnd_map:remove' type object.pk return %}">Remove</a>
+    <a href="{% url 'dnd_map:remove' world.pk type object.pk return %}">Remove</a>
     {% endif %}
     <input type="reset" value="Clear">
     <input type="submit" value="Save">

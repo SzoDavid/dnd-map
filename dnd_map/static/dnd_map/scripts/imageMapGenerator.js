@@ -33,7 +33,7 @@ class ImageMapGenerator {
         this.update()
 
         this.coords_field = coords_field
-        this.coords_field.disabled = true
+        this.coords_field.parentNode.parentNode.hidden = true
         if (this.coords_field.value !== '') {
             this.create_area(this.coords_field.value)
         }

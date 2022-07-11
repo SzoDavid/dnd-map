@@ -2,27 +2,19 @@ import json
 import os
 
 from PIL import Image
-from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404, render
-from django.urls import reverse
 
+from dnd_imh.models import World
 from dnd_map.forms import ItemForm, CoordForm
 from dnd_map.models import Item, Coord
 from dnd_map.views.functions import calculate_depth, has_loop, check_leaf_depth
 
-SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 
-
-def logout_user(request):
-    logout(request)
-    return HttpResponseRedirect(reverse('dnd_map:index'))
-
-
-@login_required(login_url='/dnd/login/')
-def toggle_description(request, item_pk):
-    item = get_object_or_404(Item, pk=item_pk)
+@login_required(login_url='/login/')
+def toggle_description(request, world_pk, item_pk):
+    item = get_object_or_404(Item, pk=item_pk, world=get_object_or_404(World, pk=world_pk))
 
     if request.method == 'POST':
         item.show_description = request.POST['value'] == 'true'
@@ -35,9 +27,9 @@ def toggle_description(request, item_pk):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 
-@login_required(login_url='/dnd/login/')
-def toggle_discovered(request, item_pk):
-    item = get_object_or_404(Item, pk=item_pk)
+@login_required(login_url='/login/')
+def toggle_discovered(request, world_pk, item_pk):
+    item = get_object_or_404(Item, pk=item_pk, world=get_object_or_404(World, pk=world_pk))
 
     if request.method == 'POST':
         if request.POST['value'] == 'true':
@@ -55,11 +47,12 @@ def toggle_discovered(request, item_pk):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 
-@login_required(login_url='/dnd/login/')
-def new(request, item_pk=0):
-    config = json.load(open(SITE_ROOT + '/../config.json'))
+@login_required(login_url='/login/')
+def new(request, world_pk, item_pk=0):
+    world = get_object_or_404(World, pk=world_pk)
 
     context = {
+        'world': world,
         'type': 'item',
         'edit': False,
         'return': request.META.get('HTTP_REFERER', '/')}
@@ -70,14 +63,14 @@ def new(request, item_pk=0):
         if form.is_valid():
             depth = calculate_depth(form.instance)
 
-            if depth >= config['max_item_display_depth']:
+            if depth >= world.max_item_tree_depth:
                 context.update({
                     'form': form,
                     'error': 'By selecting that parent the item\'s depth would be bigger than the allowed maximum!'
                 })
                 return render(request, 'dnd_map/admin/editor.html', context)
 
-            if depth < config['max_item_display_depth']:
+            if depth < world.max_item_tree_depth:
                 result = form.save(commit=False)
                 result.depth = depth
                 result.save()
@@ -86,22 +79,26 @@ def new(request, item_pk=0):
         context['form'] = form
         return render(request, 'dnd_map/admin/editor.html', context)
     else:
-        form = ItemForm()
+        form = ItemForm(instance=Item(world=world))
 
         if item_pk != 0:
             parent = get_object_or_404(Item, pk=item_pk)
-            if parent.depth < config['max_item_display_depth'] - 1:
-                form = ItemForm(instance=Item(parent=parent))
+            if parent.depth < world.max_item_tree_depth - 1:
+                form = ItemForm(instance=Item(parent=parent, world=world))
 
-        form.fields['parent'].queryset = Item.objects.exclude(depth=config['max_item_display_depth'] - 1)
+        form.fields['parent'].queryset = Item.objects.filter(world=world).exclude(depth=world.max_item_tree_depth - 1)
+        form.fields['world'].queryset = World.objects.filter(pk=world_pk)
 
         context['form'] = form
         return render(request, 'dnd_map/admin/editor.html', context)
 
 
-@login_required(login_url='/dnd/login/')
-def new_coord(request, item_pk):
+@login_required(login_url='/login/')
+def new_coord(request, world_pk, item_pk):
+    world = get_object_or_404(World, pk=world_pk)
+
     context = {
+        'world': world,
         'type': 'coord',
         'edit': False,
         'return': request.META.get('HTTP_REFERER', '/')}
@@ -116,12 +113,10 @@ def new_coord(request, item_pk):
         context['form'] = form
         return render(request, 'dnd_map/admin/editor.html', context)
     else:
-        config = json.load(open(SITE_ROOT + '/../config.json'))
-
-        item = get_object_or_404(Item, pk=item_pk)
+        item = get_object_or_404(Item, pk=item_pk, world=world)
         form = CoordForm(instance=Coord(item=item, z_axis=item.depth))
 
-        form.fields['location'].queryset = Item.objects.exclude(map='')
+        form.fields['location'].queryset = Item.objects.filter(world=world).exclude(map='')
 
         maps = {}
         for item in form.fields['location'].queryset:
@@ -135,10 +130,10 @@ def new_coord(request, item_pk):
             })
             img.close()
 
-        img = Image.open(SITE_ROOT + '/../static/dnd_map/images/maps/' + config['main_map']['path'])
+        img = Image.open(world.main_map)
         maps.update({
             '': {
-                'url': '/static/dnd_map/images/maps/' + config['main_map']['path'],
+                'url': world.main_map.url,
                 'width': img.width,
                 'height': img.height,
             },
@@ -150,12 +145,13 @@ def new_coord(request, item_pk):
         return render(request, 'dnd_map/admin/editor.html', context)
 
 
-@login_required(login_url='/dnd/login/')
-def edit(request, item_pk):
+@login_required(login_url='/login/')
+def edit(request, world_pk, item_pk):
+    world = get_object_or_404(World, pk=world_pk)
     item = get_object_or_404(Item, pk=item_pk)
-    config = json.load(open(SITE_ROOT + '/../config.json'))
 
     context = {
+        'world': world,
         'type': 'item',
         'edit': True,
         'has_map': bool(item.map),
@@ -175,13 +171,13 @@ def edit(request, item_pk):
                     'error': 'You selected a child as parent!'
                 })
                 return render(request, 'dnd_map/admin/editor.html', context)
-            if depth >= config['max_item_display_depth']:
+            if depth >= world.max_item_tree_depth:
                 context.update({
                     'form': form,
                     'error': 'By selecting that parent the item\'s depth would be bigger than the allowed maximum!'
                 })
                 return render(request, 'dnd_map/admin/editor.html', context)
-            if not check_leaf_depth(form.instance, depth, config['max_item_display_depth']):
+            if not check_leaf_depth(form.instance, depth, world.max_item_tree_depth):
                 context.update({
                     'form': form,
                     'error': 'By selecting that parent the item\'s children\'s depth would be bigger than the allowed '
@@ -189,7 +185,7 @@ def edit(request, item_pk):
                 })
                 return render(request, 'dnd_map/admin/editor.html', context)
 
-            if calculate_depth(form.instance) < config['max_item_display_depth']:
+            if calculate_depth(form.instance) < world.max_item_tree_depth:
                 if request.POST['path'] != '':
                     if bool(form.instance.map):
                         if request.POST['path'] != form.instance.map.path:
@@ -208,18 +204,21 @@ def edit(request, item_pk):
     else:
         form = ItemForm(instance=item)
 
-        form.fields['parent'].queryset = Item.objects.exclude(pk=item_pk)\
-                                                     .exclude(depth=config['max_item_display_depth'] - 1)
+        form.fields['parent'].queryset = Item.objects.filter(world=world)\
+                                                     .exclude(pk=item_pk)\
+                                                     .exclude(depth=world.max_item_tree_depth - 1)
 
         context['form'] = form
         return render(request, 'dnd_map/admin/editor.html', context)
 
 
-@login_required(login_url='/dnd/login/')
-def edit_coord(request, coord_pk):
+@login_required(login_url='/login/')
+def edit_coord(request, world_pk, coord_pk):
+    world = get_object_or_404(World, pk=world_pk)
     coord = get_object_or_404(Coord, pk=coord_pk)
 
     context = {
+        'world': world,
         'type': 'coord',
         'edit': True,
         'has_map': False,
@@ -236,11 +235,9 @@ def edit_coord(request, coord_pk):
         context['form'] = form
         return render(request, 'dnd_map/admin/editor.html', context)
     else:
-        config = json.load(open(SITE_ROOT + '/../config.json'))
-
         form = CoordForm(instance=get_object_or_404(Coord, pk=coord_pk))
 
-        form.fields['location'].queryset = Item.objects.exclude(map='')
+        form.fields['location'].queryset = Item.objects.filter(world=world).exclude(map='')
 
         maps = {}
         for item in form.fields['location'].queryset:
@@ -254,10 +251,10 @@ def edit_coord(request, coord_pk):
             })
             img.close()
 
-        img = Image.open(SITE_ROOT + '/../static/dnd_map/images/maps/' + config['main_map']['path'])
+        img = Image.open(world.main_map)
         maps.update({
             '': {
-                'url': '/static/dnd_map/images/maps/' + config['main_map']['path'],
+                'url': world.main_map.url,
                 'width': img.width,
                 'height': img.height,
             },
@@ -269,9 +266,9 @@ def edit_coord(request, coord_pk):
         return render(request, 'dnd_map/admin/editor.html', context)
 
 
-def remove(request, object_type, object_pk, redirect):
+def remove(request, world_pk, object_type, object_pk, redirect):
     if object_type == 'item':
-        obj = get_object_or_404(Item, pk=object_pk)
+        obj = get_object_or_404(Item, pk=object_pk, world=get_object_or_404(World, pk=world_pk))
 
         if bool(obj.map):
             os.remove(obj.map.path)

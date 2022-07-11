@@ -1,10 +1,10 @@
 {% extends "dnd_map/base.html" %}
 {% load static %}
 
-{% block title %}{{ world_name }} | D&D IMV{% endblock %}
+{% block title %}{{ world.name }} | D&D IMV{% endblock %}
 
 {% block scripts %}
-{% if is_map_set and coords %}
+{% if world.main_map and coords %}
 <script src="{% static 'dnd_map/scripts/mapResize.js' %}"></script>
 {% endif %}
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
@@ -13,7 +13,7 @@
 <script src="{% static 'dnd_map/scripts/toggleButtons.js' %}"></script>
 <script>
     window.onload = function () {
-        {% if is_map_set and coords %}
+        {% if world.main_map and coords %}
         new ImageMap(
             document.getElementById('map'),
             document.getElementById('img'),
@@ -21,21 +21,27 @@
         {% endif %}
 
         {% if items %}
-        populateListView('{{ items | safe }}', {{ user.is_authenticated|yesno:"true,false" }}, "{% url 'dnd_map:new' %}")
+        populateListView('{{ items | safe }}', {{ user.is_authenticated|yesno:"true,false" }}, "{% url 'dnd_map:new' world.pk %}")
         {% endif %}
     }
 </script>
 {% endblock %}
 
 {% block body %}
-{% if is_map_set %}
+<div id="details">
+    <h1>{{ world.name }}</h1>
+    {% if world.description %}
+    <p>{{ world.description }}</p>
+    {% endif %}
+</div>
+{% if world.main_map %}
 <div id="map_view">
-    <img id="img" src="{% static map_path %}" alt="Map of the world" usemap="#map" width="50%">
+    <img id="img" src="{{ world.main_map.url }}" alt="Map of the world" usemap="#map" width="50%">
 
     {% if coords %}
     <map id="map" name="map">
         {% for coord in coords %}
-        <area shape="rect" coords="{{ coord.coords }}" href="{% url 'dnd_map:details' coord.item.pk %}"
+        <area shape="rect" coords="{{ coord.coords }}" href="{% url 'dnd_map:details' world.pk coord.item.pk %}"
               title="{{ coord.item.name }}" alt="{{ coord.item.name }}">
         {% endfor %}
     </map>
