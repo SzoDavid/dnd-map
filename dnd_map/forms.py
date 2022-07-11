@@ -7,7 +7,7 @@ from dnd_map.models import Item, Coord
 class ItemForm(forms.ModelForm):
     class Meta:
         model = Item
-        fields = ['name', 'pronunciation', 'type', 'discovered', 'notes', 'description', 'show_description', 'parent',
+        fields = ['world', 'name', 'pronunciation', 'type', 'discovered', 'notes', 'description', 'show_description', 'parent',
                   'map']
         help_texts = {
             'name': mark_safe('[required]'),

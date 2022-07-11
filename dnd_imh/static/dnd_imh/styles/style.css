@@ -1,0 +1,59 @@
+a {
+    text-decoration: none;
+}
+
+p, td {
+    font-family: Arial, sans-serif;
+}
+
+form {
+    margin-bottom: 50px;
+}
+
+th, td{
+    font-size: 20px;
+    padding-right: 20px;
+}
+
+th {
+    font-family: "luminari", sans-serif;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+    background-color: #ffdccf;
+}
+
+.menu {
+    width: available;
+    padding: 10px 25px;
+    margin-bottom: 25px;
+    background-color: #f44336;
+    border-bottom-color: #aa0000;
+    border-bottom-width: 5px;
+    border-bottom-style: solid;
+}
+
+.menu a {
+    color: white;
+    text-decoration: none;
+    font-size: 24px;
+    font-family: "luminari", sans-serif;
+    margin-left: 15px;
+    text-shadow: 1px 1px black;
+}
+
+.menu .title {
+    font-size: 32px;
+}
+
+h1, h2 {
+    font-family: "luminari", sans-serif;
+    text-shadow: 1px 1px #f44336;
+}
+
+.content {
+    width: 75%;
+    margin: auto;
+}

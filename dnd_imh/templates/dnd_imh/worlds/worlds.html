@@ -1,0 +1,28 @@
+{% extends "dnd_imh/base.html" %}
+
+{% block body %}
+<div class="content">
+    <h1>Worlds</h1>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="searchbar">Search: </label><input id="searchbar" name="search" type="search" value="{{ search }}">
+    </form>
+
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Owner</th>
+        </tr>
+        {% for world in worlds %}
+        <tr>
+            <td><a href="{% url 'dnd_map:index' world.pk %}">{{ world.name }}</a></td>
+            <td>{{ world.owner }}</td>
+            {% if world.owner == user %}
+            <td><a href="{% url 'dnd_imh:edit_world' world.pk %}">edit</a></td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

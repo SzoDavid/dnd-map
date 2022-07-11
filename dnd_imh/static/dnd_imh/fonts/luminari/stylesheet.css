@@ -1,0 +1,13 @@
+@font-face {
+    font-family: 'Luminari';
+    src: url('Luminari.eot');
+    src: local('Luminari'),
+        url('Luminari.eot?#iefix') format('embedded-opentype'),
+        url('Luminari.woff2') format('woff2'),
+        url('Luminari.woff') format('woff'),
+        url('Luminari.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+

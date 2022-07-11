@@ -1,24 +1,24 @@
 from django.urls import reverse
 
 
-def create_item_node(item):
+def create_item_node(item, world):
     return {
         'name': str(item.name).replace('\'', '\\u0027'),
         'type': str(item.type).replace('\'', '\\u0027'),
-        'details': reverse('dnd_map:details', args=(item.pk,)),
-        'edit': reverse('dnd_map:edit', args=(item.pk,)),
+        'details': reverse('dnd_map:details', args=(world.pk, item.pk,)),
+        'edit': reverse('dnd_map:edit', args=(world.pk, item.pk,)),
         'discovered': item.discovered,
-        'toggle_discovered': reverse('dnd_map:toggle_discovered', args=(item.pk,)),
+        'toggle_discovered': reverse('dnd_map:toggle_discovered', args=(world.pk, item.pk,)),
         'description': item.show_description,
-        'toggle_description': reverse('dnd_map:toggle_description', args=(item.pk,)),
-        'add_child': reverse('dnd_map:new', args=(item.pk,)),
+        'toggle_description': reverse('dnd_map:toggle_description', args=(world.pk, item.pk,)),
+        'add_child': reverse('dnd_map:new', args=(world.pk, item.pk,)),
         'children': [],
         'depth': item.depth,
     }
 
 
-def create_item_tree(item_root, discovered, depth):
-    node = create_item_node(item_root)
+def create_item_tree(world, item_root, discovered, depth):
+    node = create_item_node(item_root, world)
 
     if depth == 0:
         return node
@@ -32,7 +32,7 @@ def create_item_tree(item_root, discovered, depth):
         return node
 
     for item in items:
-        node['children'].append(create_item_tree(item, discovered, depth - 1))
+        node['children'].append(create_item_tree(world, item, discovered, depth - 1))
 
     return node
 
