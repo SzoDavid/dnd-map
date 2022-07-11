@@ -5,6 +5,7 @@ from PIL import Image
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
 
 from dnd_imh.models import World
 from dnd_map.forms import ItemForm, CoordForm
@@ -12,7 +13,7 @@ from dnd_map.models import Item, Coord
 from dnd_map.views.functions import calculate_depth, has_loop, check_leaf_depth
 
 
-@login_required(login_url='/login/')
+@login_required(login_url='dnd_imh:login')
 def toggle_description(request, world_pk, item_pk):
     item = get_object_or_404(Item, pk=item_pk, world=get_object_or_404(World, pk=world_pk))
 
@@ -27,7 +28,7 @@ def toggle_description(request, world_pk, item_pk):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 
-@login_required(login_url='/login/')
+@login_required(login_url='dnd_imh:login')
 def toggle_discovered(request, world_pk, item_pk):
     item = get_object_or_404(Item, pk=item_pk, world=get_object_or_404(World, pk=world_pk))
 
@@ -47,7 +48,7 @@ def toggle_discovered(request, world_pk, item_pk):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 
-@login_required(login_url='/login/')
+@login_required(login_url='dnd_imh:login')
 def new(request, world_pk, item_pk=0):
     world = get_object_or_404(World, pk=world_pk)
 
@@ -93,7 +94,7 @@ def new(request, world_pk, item_pk=0):
         return render(request, 'dnd_map/admin/editor.html', context)
 
 
-@login_required(login_url='/login/')
+@login_required(login_url='dnd_imh:login')
 def new_coord(request, world_pk, item_pk):
     world = get_object_or_404(World, pk=world_pk)
 
@@ -146,7 +147,7 @@ def new_coord(request, world_pk, item_pk):
         return render(request, 'dnd_map/admin/editor.html', context)
 
 
-@login_required(login_url='/login/')
+@login_required(login_url='dnd_imh:login')
 def edit(request, world_pk, item_pk):
     world = get_object_or_404(World, pk=world_pk)
     item = get_object_or_404(Item, pk=item_pk)
@@ -213,7 +214,7 @@ def edit(request, world_pk, item_pk):
         return render(request, 'dnd_map/admin/editor.html', context)
 
 
-@login_required(login_url='/login/')
+@login_required(login_url='dnd_imh:login')
 def edit_coord(request, world_pk, coord_pk):
     world = get_object_or_404(World, pk=world_pk)
     coord = get_object_or_404(Coord, pk=coord_pk)
