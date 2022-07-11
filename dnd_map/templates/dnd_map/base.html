@@ -12,7 +12,7 @@
 </head>
 <body>
 <div id="menu">
-    <a href="{% url 'dnd_imh:index' %}"><img src="{% static 'dnd_map/images/favicon/favicon.ico' %}" alt="logo" height="32" width="32"></a>
+    <a href="{% url 'dnd_imh:index' %}"><img src="{% static 'dnd_map/images/favicon/favicon.ico' %}" alt="logo" height="32" width="32">IMH</a>
     <a href="{% url 'dnd_map:index' world.pk %}">D&D Interactive Map Viewer</a>
     <a href="{% url 'dnd_map:search' world.pk %}">Search</a>
     {% if user.is_authenticated %}
