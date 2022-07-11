@@ -35,11 +35,10 @@ showing/hiding locations or descriptions
 - List view improvements
     - [X] List view open/close
     - [X] Make discovered and description toggles async
-    - [ ] List view group by type - When world creator is done
+    - [ ] List view group by type
 - [X] Add multiple world hosting, and world creator
-- [ ] Import/Export with json - When world creator is done
+- [ ] Import/Export with json - automatically export before removing worlds
 - [ ] 404 page
-- [ ] Automatic backups - When world creator is done
 - [ ] Move form verification to clean() function
 - [ ] Discord bot
 - [ ] Application
