@@ -37,6 +37,7 @@ showing/hiding locations or descriptions
     - [X] Make discovered and description toggles async
     - [ ] List view group by type
 - [X] Add multiple world hosting, and world creator
+- [ ] User page
 - [ ] Import/Export with json - automatically export before removing worlds
 - [ ] 404 page
 - [ ] Move form verification to clean() function
