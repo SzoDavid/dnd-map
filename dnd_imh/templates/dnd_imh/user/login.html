@@ -14,5 +14,7 @@
     {% if form.errors %}
     <p>Your username and password didn't match. Please try again!</p>
     {% endif %}
+
+    <a href="{% url 'dnd_imh:register_user'%}">Create an account</a>
 </div>
 {% endblock %}

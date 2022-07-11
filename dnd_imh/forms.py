@@ -1,4 +1,6 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 from django.utils.safestring import mark_safe
 
 from dnd_imh.models import World
@@ -14,3 +16,9 @@ class WorldForm(forms.ModelForm):
                                                      'tree. Smaller than or equal to '
                                                      '<em>max item child tree depth</em>')
         }
+
+
+class RegisterForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ["username", "email", "password1", "password2"]

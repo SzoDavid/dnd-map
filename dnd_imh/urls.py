@@ -10,6 +10,7 @@ urlpatterns = [
     path('logout', views.logout_user, name='logout'),
     path('login', auth_views.LoginView.as_view(template_name='dnd_imh/user/login.html', next_page='/',
                                                redirect_authenticated_user=True), name='login'),
+    path('register', views.register_user, name='register_user'),
     path('about', views.about, name='about'),
     path('worlds', views.worlds, name='worlds'),
     path('createworld', views.create_world, name='create_world'),
