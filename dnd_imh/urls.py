@@ -13,5 +13,6 @@ urlpatterns = [
     path('about', views.about, name='about'),
     path('worlds', views.worlds, name='worlds'),
     path('createworld', views.create_world, name='create_world'),
-    path('<int:world_pk>/editworld', views.edit_world, name='edit_world')
+    path('<int:world_pk>/editworld', views.edit_world, name='edit_world'),
+    path('<int:world_pk>/removeworld', views.remove_world, name='remove_world')
 ]

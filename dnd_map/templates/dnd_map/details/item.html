@@ -66,14 +66,14 @@
 {% if is_owner and item.notes %}
 <div id="notes">
     <h2>Notes</h2>
-    <p>{{ item.notes }}</p>
+    <p><pre>{{ item.notes }}</pre></p>
 </div>
 {% endif %}
 {% if is_owner or item.show_description %}
 {% if item.description %}
 <div id="description">
     <h2>Description</h2>
-    <p>{{ item.description }}</p>
+    <p><pre>{{ item.description }}</pre></p>
 </div>
 {% endif %}
 {% endif %}

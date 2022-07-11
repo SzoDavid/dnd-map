@@ -8,6 +8,7 @@ from django.urls import reverse
 
 from dnd_imh.forms import WorldForm
 from dnd_imh.models import World
+from dnd_map.models import Item
 
 
 def logout_user(request):
@@ -46,7 +47,7 @@ def edit_world(request, world_pk):
     context = {
         'world': world,
         'edit': True,
-        'has_map': bool(world.map),
+        'has_map': bool(world.main_map),
         'return': request.META.get('HTTP_REFERER', '/')}
 
     if request.method == 'POST':
@@ -54,8 +55,8 @@ def edit_world(request, world_pk):
 
         if form.is_valid():
             if request.POST['path'] != '':
-                if bool(form.instance.map):
-                    if request.POST['path'] != form.instance.map.path:
+                if bool(form.instance.main_map):
+                    if request.POST['path'] != form.instance.main_map.path:
                         os.remove(request.POST['path'])
                     else:
                         os.remove(request.POST['path'])
@@ -65,14 +66,28 @@ def edit_world(request, world_pk):
             return HttpResponseRedirect(request.POST['return'])
 
         context['form'] = form
-        return render(request, 'dnd_map/admin/editor.html', context)
+        return render(request, 'dnd_imh/user/editor.html', context)
     else:
         form = WorldForm(instance=world)
 
         context['form'] = form
-        return render(request, 'dnd_map/admin/editor.html', context)
+        return render(request, 'dnd_imh/user/editor.html', context)
 
 
 @login_required(login_url='/login/')
-def remove_form(request, world_pk):
-    return
+def remove_world(request, world_pk):
+    world = get_object_or_404(World, pk=world_pk)
+
+    if request.user != world.owner:
+        return redirect(reverse('dnd:imh:index'))
+
+    if bool(world.main_map):
+        os.remove(world.main_map.path)
+
+    for item in Item.objects.filter(world=world):
+        if bool(item.map):
+            os.remove(item.map.path)
+
+    world.delete()
+
+    return redirect(reverse('dnd_imh:index'))

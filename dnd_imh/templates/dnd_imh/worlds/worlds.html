@@ -18,6 +18,9 @@
         <tr>
             <td><a href="{% url 'dnd_map:index' world.pk %}">{{ world.name }}</a></td>
             <td>{{ world.owner }}</td>
+            {% if world.owner == user %}
+            <td><a href="{% url 'dnd_imh:edit_world' world.pk %}">edit</a></td>
+            {% endif %}
         </tr>
         {% endfor %}
     </table>

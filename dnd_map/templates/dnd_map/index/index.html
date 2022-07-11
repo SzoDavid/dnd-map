@@ -29,9 +29,12 @@
 
 {% block body %}
 <div id="details">
-    <h1>{{ world.name }}</h1>
+    <h1>
+        <a class="button" href="{% url 'dnd_imh:edit_world' world.pk %}">✎</a>
+        {{ world.name }}
+    </h1>
     {% if world.description %}
-    <p>{{ world.description }}</p>
+    <p><pre>{{ world.description }}</pre></p>
     {% endif %}
 </div>
 {% if world.main_map %}
