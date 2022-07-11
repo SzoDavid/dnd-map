@@ -18,6 +18,7 @@
     <a href="{% url 'dnd_imh:about' %}">About</a>
     <a href="{% url 'dnd_imh:worlds' %}">Worlds</a>
     {% if user.is_authenticated %}
+    <a href="{% url 'dnd_imh:create_world' %}">Create world</a>
     <a href="{% url 'dnd_imh:logout' %}">Logout</a>
     {% else %}
     <a href="{% url 'dnd_imh:login' %}">Login</a>

@@ -11,5 +11,7 @@ urlpatterns = [
     path('login', auth_views.LoginView.as_view(template_name='dnd_imh/user/login.html', next_page='/',
                                                redirect_authenticated_user=True), name='login'),
     path('about', views.about, name='about'),
-    path('worlds', views.worlds, name='worlds')
+    path('worlds', views.worlds, name='worlds'),
+    path('createworld', views.create_world, name='create_world'),
+    path('<int:world_pk>/editworld', views.edit_world, name='edit_world')
 ]

@@ -1,0 +1,46 @@
+{% extends "dnd_imh/base.html" %}
+{% load static %}
+
+{% block title %}{% if edit %}Edit {{ world.name }}{% else %}New world{%endif%} | D&D IMH{% endblock %}
+
+{% block scripts %}
+<script>
+    window.onload = function () {
+        document.getElementById('id_owner').parentNode.parentNode.hidden = true
+    }
+</script>
+{% endblock %}
+
+{% block body %}
+<div class="content">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <fieldset>
+            <legend><h1>{% if edit %}Edit {{ world.name }}{% else %}New world{%endif%}</h1></legend>
+            {% if form.errors %}
+            {{ form.non_field_errors}}
+            {% endif %}
+            <table>
+                {% for field in form %}
+                <tr>
+                    <th>{{ field.label_tag }}</th>
+                    <td>{{ field }}</td>
+                    <td class="help">{{ field.help_text }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </fieldset>
+        <label hidden>
+            <input name="return" value="{{ return }}" hidden>
+            {% if edit %}
+            <input name="path" {% if has_map %} value="{{ world.map.path }}"  {% endif %} hidden>
+            {% endif %}
+        </label>
+        {% if edit %}
+        <a href="{% url 'dnd_imh:remove' world.pk %}">Remove</a>
+        {% endif %}
+        <input type="reset" value="Clear">
+        <input type="submit" value="Save">
+    </form>
+</div>
+{% endblock %}
