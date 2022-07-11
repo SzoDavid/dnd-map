@@ -26,7 +26,7 @@ def items(request, world_pk, item_pk):
         original_width = map_img.width
         map_img.close()
 
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and world.owner == request.user:
         item_roots = Item.objects.filter(parent=item)
         coords = Coord.objects.all().order_by('-z_axis')
         appearances = Coord.objects.filter(item=item)
@@ -37,7 +37,7 @@ def items(request, world_pk, item_pk):
 
     for item_root in item_roots:
         item_list.append(create_item_tree(world, item_root,
-                                          not request.user.is_authenticated,
+                                          not (request.user.is_authenticated and world.owner == request.user),
                                           world.max_item_tree_display_depth - 1))
 
     data = {'max_depth': world.max_item_tree_display_depth,
@@ -45,6 +45,7 @@ def items(request, world_pk, item_pk):
 
     context = {
         'world': world,
+        'is_owner': world.owner == request.user,
         'item': item,
         'map_original_width': original_width,
         'items': json.dumps(data),
@@ -56,18 +57,19 @@ def items(request, world_pk, item_pk):
 
 
 def search(request, world_pk):
+    world = get_object_or_404(World, pk=world_pk)
     if request.method == 'POST':
         search_value = request.POST['search']
 
-        if request.user.is_authenticated:
-            item_query = Item.objects.filter(Q(name__icontains=search_value, world__pk=world_pk) |
-                                             Q(type__icontains=search_value, world__pk=world_pk))
+        if request.user.is_authenticated and world.owner == request.user:
+            item_query = Item.objects.filter(Q(name__icontains=search_value, world=world) |
+                                             Q(type__icontains=search_value, world=world))
         else:
-            item_query = Item.objects.filter(Q(name__icontains=search_value, world__pk=world_pk, discovered=True) |
-                                             Q(type__icontains=search_value, world__pk=world_pk, discovered=True))
+            item_query = Item.objects.filter(Q(name__icontains=search_value, world=world, discovered=True) |
+                                             Q(type__icontains=search_value, world=world, discovered=True))
 
         result = {
-            'auth': request.user.is_authenticated,
+            'auth': request.user.is_authenticated and world.owner == request.user,
             'query': [],
         }
         for item in item_query:
@@ -84,4 +86,4 @@ def search(request, world_pk):
             })
         return JsonResponse(result)
     else:
-        return render(request, 'dnd_map/details/search.html', {'world': get_object_or_404(World, pk=world_pk)})
+        return render(request, 'dnd_map/details/search.html', {'world': world})

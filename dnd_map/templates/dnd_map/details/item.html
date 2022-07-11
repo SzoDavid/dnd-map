@@ -18,7 +18,7 @@
         {% endif %}
 
         {% if items %}
-        populateListView('{{ items | safe }}', {{ user.is_authenticated | yesno:"true,false" }}, "{% url 'dnd_map:new' world.pk item.pk %}")
+        populateListView('{{ items | safe }}', {{ is_owner|yesno:"true,false" }}, "{% url 'dnd_map:new' world.pk item.pk %}")
         {% endif %}
     }
 </script>
@@ -27,7 +27,7 @@
 {% block body %}
 <div id="information">
     <h1>
-        {% if user.is_authenticated %}
+        {% if is_owner %}
         <a class="toggle {% if not item.discovered %} off {% endif %}" onclick="toggle_value(this, '{% url 'dnd_map:toggle_discovered' world.pk item.pk %}')">
             ⚑
         </a>
@@ -63,13 +63,13 @@
         {% endif%}
     </table>
 </div>
-{% if user.is_authenticated and item.notes %}
+{% if is_owner and item.notes %}
 <div id="notes">
     <h2>Notes</h2>
     <p>{{ item.notes }}</p>
 </div>
 {% endif %}
-{% if user.is_authenticated or item.show_description %}
+{% if is_owner or item.show_description %}
 {% if item.description %}
 <div id="description">
     <h2>Description</h2>
@@ -96,14 +96,14 @@
     <div id="list_view" class="list_column"></div>
     {% endif %}
 
-    {% if user.is_authenticated or appearances%}
+    {% if is_owner or appearances%}
     <div class="list_column">
         <h2>Appearances on maps</h2>
         <ul>
             {% if appearances %}
             {% for appearance in appearances %}
             <li>
-                {% if user.is_authenticated %}
+                {% if is_owner %}
                 <a class="button" href="{% url 'dnd_map:edit_coord' world.pk appearance.pk %}">✎</a>
                 {% endif %}
                 {% if appearance.location %}
@@ -114,7 +114,7 @@
             </li>
             {% endfor %}
             {% endif%}
-            {% if user.is_authenticated %}
+            {% if is_owner %}
             <li>
                 <a class="button" href="{% url 'dnd_map:new_coord' world.pk item.pk %}">+</a>
             </li>

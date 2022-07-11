@@ -20,16 +20,16 @@ def index(request, world_pk):
         original_width = map_img.width
         map_img.close()
 
-    if request.user.is_authenticated:
-        item_roots = Item.objects.filter(parent__isnull=True)
-        coords = Coord.objects.all().order_by('-z_axis')
+    if request.user.is_authenticated and world.owner == request.user:
+        item_roots = Item.objects.filter(world=world, parent__isnull=True)
+        coords = Coord.objects.filter(item__world=world).order_by('-z_axis')
     else:
-        item_roots = Item.objects.filter(parent__isnull=True, discovered=True)
-        coords = Coord.objects.filter(item__discovered=True).order_by('-z_axis')
+        item_roots = Item.objects.filter(world=world, parent__isnull=True, discovered=True)
+        coords = Coord.objects.filter(item__world=world, item__discovered=True).order_by('-z_axis')
 
     for item_root in item_roots:
         items.append(create_item_tree(world, item_root,
-                                      not request.user.is_authenticated,
+                                      not (request.user.is_authenticated and world.owner == request.user),
                                       world.max_item_tree_display_depth - 1))
 
     data = {'max_depth': world.max_item_tree_display_depth,
@@ -37,6 +37,7 @@ def index(request, world_pk):
 
     context = {
         'world': world,
+        'is_owner': world.owner == request.user,
         'map_original_width': original_width,
         'items': json.dumps(data),
         'coords': coords,

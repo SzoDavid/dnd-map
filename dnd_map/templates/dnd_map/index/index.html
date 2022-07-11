@@ -21,7 +21,7 @@
         {% endif %}
 
         {% if items %}
-        populateListView('{{ items | safe }}', {{ user.is_authenticated|yesno:"true,false" }}, "{% url 'dnd_map:new' world.pk %}")
+        populateListView('{{ items | safe }}', {{ is_owner|yesno:"true,false" }}, "{% url 'dnd_map:new' world.pk %}")
         {% endif %}
     }
 </script>
