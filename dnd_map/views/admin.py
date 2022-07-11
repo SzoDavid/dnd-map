@@ -116,6 +116,7 @@ def new_coord(request, world_pk, item_pk):
         item = get_object_or_404(Item, pk=item_pk, world=world)
         form = CoordForm(instance=Coord(item=item, z_axis=item.depth))
 
+        form.fields['item'].queryset = Item.objects.filter(world=world)
         form.fields['location'].queryset = Item.objects.filter(world=world).exclude(map='')
 
         maps = {}
@@ -237,6 +238,7 @@ def edit_coord(request, world_pk, coord_pk):
     else:
         form = CoordForm(instance=get_object_or_404(Coord, pk=coord_pk))
 
+        form.fields['item'].queryset = Item.objects.filter(world=world)
         form.fields['location'].queryset = Item.objects.filter(world=world).exclude(map='')
 
         maps = {}
