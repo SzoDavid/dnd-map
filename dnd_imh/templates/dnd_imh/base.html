@@ -13,10 +13,10 @@
 </head>
 <body>
 <div class="menu">
-    <a class="title" href="{% url 'dnd_imh:index' %}">
-        <img src="{% static 'dnd_map/images/favicon/favicon.ico' %}" alt="logo" height="45" width="45"> D&D Interactive Map Hub
-    </a>
+    <img src="{% static 'dnd_map/images/favicon/favicon.ico' %}" alt="logo" height="45" width="45">
+    <a class="title" href="{% url 'dnd_imh:index' %}">D&D Interactive Map Hub</a>
     <a href="{% url 'dnd_imh:about' %}">About</a>
+    <a href="{% url 'dnd_imh:worlds' %}">Worlds</a>
     {% if user.is_authenticated %}
     <a href="{% url 'dnd_imh:logout' %}">Logout</a>
     {% else %}

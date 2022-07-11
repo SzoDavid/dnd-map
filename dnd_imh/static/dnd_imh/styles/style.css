@@ -1,5 +1,19 @@
+a {
+    text-decoration: none;
+}
+
 p {
     font-family: Arial, sans-serif;
+}
+
+form {
+    margin-bottom: 50px;
+}
+
+th, td {
+    font-size: 20px;
+    font-family: "luminari", sans-serif;
+    padding-right: 20px;
 }
 
 body {
