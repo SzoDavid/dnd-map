@@ -34,7 +34,7 @@ def register_user(request):
         return render(request, 'dnd_imh/user/register.html', context)
 
 
-@login_required(login_url='/login/')
+@login_required(login_url='dnd_imh:login')
 def create_world(request):
     context = {
         'edit': False,
@@ -55,7 +55,7 @@ def create_world(request):
         return render(request, 'dnd_imh/user/editor.html', context)
 
 
-@login_required(login_url='/login/')
+@login_required(login_url='dnd_imh:login')
 def edit_world(request, world_pk):
     world = get_object_or_404(World, pk=world_pk)
 
@@ -92,7 +92,7 @@ def edit_world(request, world_pk):
         return render(request, 'dnd_imh/user/editor.html', context)
 
 
-@login_required(login_url='/login/')
+@login_required(login_url='dnd_imh:login')
 def remove_world(request, world_pk):
     world = get_object_or_404(World, pk=world_pk)
 
