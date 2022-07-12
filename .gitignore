@@ -6,10 +6,9 @@
 __pycache__
 
 media
-base
+base/settings.py
 
 db.sqlite3
-manage.py
 
 dnd_map/migrations/*
 dnd_imh/migrations/*
