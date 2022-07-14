@@ -6,7 +6,6 @@
 __pycache__
 
 media
-base/settings.py
 
 db.sqlite3
 
