@@ -10,7 +10,7 @@ function generateItem(item, auth) {
     table.append(tr_title)
 
     if (item['children'].length !== 0) {
-        tr_title.innerHTML += `<td rowspan="2"><button class="toggle" onclick="collapse(this)">⮟</button></td>`
+        tr_title.innerHTML += `<td${ auth ? ' rowspan="2"' : '' }><button class="toggle" onclick="collapse(this)">⮟</button></td>`
     }
 
     if (auth) {
