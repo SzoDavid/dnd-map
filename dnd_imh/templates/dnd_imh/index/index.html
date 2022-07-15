@@ -1,14 +1,11 @@
 {% extends "dnd_imh/base.html" %}
 
-{% block body %}
-<div class="content">
-    <h1>Welcome to the Interactive Map Hub</h1>
-    <div>
-        <h2>Help your players imagine the world they are playing in!</h2>
-        <p>You can add all the cities in your world, with their maps, and add links to the maps, so if someone clicks on a place, they can see all the details about it.</p>
-        <p>Also, you can group the places in hierarchic order, to make it clear which place is where.</p>
-        <h2>Plan your world, without the players knowing it!</h2>
-        <p>You can set if a place has been discovered yet, and if it hasn't been yet, the players won't see it. You can hide descriptions too, to keep the mystery. There is also place for notes, which are for you only.</p>
-    </div>
-</div>
+{% block content-title %}Welcome to the Interactive Map Hub{% endblock %}
+{% block content %}
+    <h2>Help your players imagine the world they are playing in!</h2>
+    <p>You can add all the cities in your world, with their maps, and add links to the maps, so if someone clicks on a place, they can see all the details about it.</p>
+    <p>Also, you can group the places in hierarchic order, to make it clear which place is where.</p>
+
+    <h2>Plan your world, without the players knowing it!</h2>
+    <p>You can set if a place has been discovered yet, and if it hasn't been yet, the players won't see it. You can hide descriptions too, to keep the mystery. There is also place for notes, which are for you only.</p>
 {% endblock %}

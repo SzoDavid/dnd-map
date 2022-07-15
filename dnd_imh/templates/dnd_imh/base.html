@@ -39,6 +39,11 @@
         </div>
     </li>
 </ul>
-<div class="content_wrap">{% block body%}{% endblock %}</div>
+<div class="content-container">
+    <div class="content">
+        <div class="content-title"><h1>{% block content-title %}{% endblock %}</h1></div>
+        <div class="content-body">{% block content%}{% endblock %}</div>
+    </div>
+</div>
 </body>
 </html>

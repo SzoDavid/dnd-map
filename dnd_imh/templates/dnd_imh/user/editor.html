@@ -18,36 +18,32 @@
 </script>
 {% endblock %}
 
-{% block body %}
-<div class="content">
+{% block content-title %}{% if edit %}Edit {{ world.name }}{% else %}New world{% endif %}{% endblock %}
+{% block content %}
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <fieldset>
-            <legend><h1>{% if edit %}Edit {{ world.name }}{% else %}New world{%endif%}</h1></legend>
-            {% if form.errors %}
+        {% if form.errors %}
             {{ form.non_field_errors}}
-            {% endif %}
-            <table>
-                {% for field in form %}
+        {% endif %}
+        <table>
+            {% for field in form %}
                 <tr>
                     <th>{{ field.label_tag }}</th>
                     <td>{{ field }}</td>
                     <td class="help">{{ field.help_text }}</td>
                 </tr>
-                {% endfor %}
-            </table>
-        </fieldset>
+            {% endfor %}
+        </table>
         <label hidden>
             <input name="return" value="{{ return }}" hidden>
             {% if edit %}
-            <input name="path" {% if has_map %} value="{{ world.map.path }}"  {% endif %} hidden>
+                <input name="path" {% if has_map %} value="{{ world.map.path }}"  {% endif %} hidden>
             {% endif %}
         </label>
         {% if edit %}
-        <button onclick="remove()">Remove</button>
+            <button onclick="remove()">Remove</button>
         {% endif %}
         <input type="reset" value="Clear">
         <input type="submit" value="Save">
     </form>
-</div>
 {% endblock %}

@@ -1,13 +1,13 @@
 {% extends "dnd_imh/base.html" %}
 
-{% block title %}Create an Account{% endblock %}
+{% block title %}Create a new account | D&D IMH{% endblock %}
 
-{% block body %}
-<div class="content">
+{% block content-title %}Create a new account{% endblock %}
+
+{% block content %}
     <form method="POST" class="form-group">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit" class="btn btn-success">Register</button>
     </form>
-</div>
 {% endblock %}
