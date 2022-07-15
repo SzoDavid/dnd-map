@@ -2,6 +2,7 @@ import os
 
 from django.contrib.auth import logout, login
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
@@ -32,6 +33,19 @@ def register_user(request):
         form = RegisterForm()
         context['form'] = form
         return render(request, 'dnd_imh/user/register.html', context)
+
+
+def user(request, user_pk):
+    user_obj = get_object_or_404(User, pk=user_pk, is_active=True)
+    worlds = World.objects.filter(owner=user_obj)
+
+    context = {
+        'user': user_obj,
+        'worlds': worlds,
+        'is_owner': request.user == user_obj
+    }
+
+    return render(request, 'dnd_imh/user/user.html', context)
 
 
 @login_required(login_url='dnd_imh:login')
