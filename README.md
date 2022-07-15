@@ -40,6 +40,7 @@ showing/hiding locations or descriptions
 - [X] User page
 - [ ] Import/Export with json - automatically export before removing worlds
 - [ ] 404 page
+- [ ] Features on the index page of dnd_imh - Admins can send nessages to users and if they agree their world will be featured on the front page
 - [ ] Move form verification to clean() function
 - [ ] Discord bot
 - [ ] Application
