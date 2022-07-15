@@ -2,14 +2,11 @@
 
 {% block title %}{{ user_obj.username }} | D&D IMH{% endblock %}
 
-{% block body %}
-<div class="content">
-    <h1>{{ user_obj.username }}</h1>
+{% block content-title %}
+    {{ user_obj.username }}{% if user_obj.is_staff %} <span style="font-size: 20px">(staff)</span>{% endif %}
+{% endblock %}
 
-    {% if user_obj.is_staff %}
-    <p>Admin</p>
-    {% endif %}
-
+{% block content %}
     <h2>Worlds</h2>
     {% if worlds%}
     <table>
@@ -30,5 +27,4 @@
     {% else %}
     <p>This user didn't create any world yet.</p>
     {% endif %}
-</div>
 {% endblock %}

@@ -1,7 +1,10 @@
 {% extends "dnd_imh/base.html" %}
 
-{% block body %}
-<div class="content">
+{% block title %}Login | D&D IMH{% endblock %}
+
+{% block content-title %}Login{% endblock %}
+
+{% block content %}
     <form method="post" action="{% url 'dnd_imh:login' %}">
         {% csrf_token %}
         {{ form.username.label_tag }}<br>
@@ -16,5 +19,4 @@
     {% endif %}
 
     <a href="{% url 'dnd_imh:register_user'%}">Create an account</a>
-</div>
 {% endblock %}

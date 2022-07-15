@@ -114,7 +114,7 @@ h1, h2 {
     text-shadow: 1px 1px #f4433677;
 }
 
-.content_wrap {
+.content-container {
     position: absolute;
     left: 0;
     top: 100px;
@@ -127,8 +127,19 @@ h1, h2 {
 .content {
     width: 65%;
     margin: auto;
-    padding: 25px 50px 50px 50px;
     background-color: #ffdccf77;
-    border-radius: 20px;
+    border-radius: 10px;
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.content-title {
+    padding: 1px 25px 1px 25px;
+    background-color: #ffdccf77;
+    border-radius: 10px 10px 0 0;
+    color: black;
+    box-shadow: 0 0 4px 0 rgba(0,0,0,0.2);
+}
+
+.content-body {
+    padding: 20px 50px;
 }
