@@ -19,7 +19,7 @@
     <a href="{% url 'dnd_imh:worlds' %}">Worlds</a>
 
     <div class="dropdown">
-        <img src="user.ico" alt="user">
+        <img src="{% static 'dnd_imh/images/user-icon.svg' %}" alt="user" height="37" width="37">
         <div class="dropdown-content">
             {% if user.is_authenticated %}
             <a href="{% url 'dnd_imh:user' user.pk %}">{{ user.username }}</a>
