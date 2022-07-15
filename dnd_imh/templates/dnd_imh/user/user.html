@@ -1,12 +1,12 @@
 {% extends "dnd_imh/base.html" %}
 
-{% block title %}{{ user.username }} | D&D IMH{% endblock %}
+{% block title %}{{ user_obj.username }} | D&D IMH{% endblock %}
 
 {% block body %}
 <div class="content">
-    <h1>{{ user.username }}</h1>
+    <h1>{{ user_obj.username }}</h1>
 
-    {% if user.is_staff %}
+    {% if user_obj.is_staff %}
     <p>Admin</p>
     {% endif %}
 

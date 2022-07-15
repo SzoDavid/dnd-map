@@ -40,7 +40,7 @@ def user(request, user_pk):
     worlds = World.objects.filter(owner=user_obj)
 
     context = {
-        'user': user_obj,
+        'user_obj': user_obj,
         'worlds': worlds,
         'is_owner': request.user == user_obj
     }
