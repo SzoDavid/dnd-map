@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from dnd_imh.models import World
+from dnd_imh.models import World, Backup
 
 
 class WorldAdmin(admin.ModelAdmin):
@@ -20,4 +20,16 @@ class WorldAdmin(admin.ModelAdmin):
     list_display = ('name', 'owner')
 
 
+class BackupAdmin(admin.ModelAdmin):
+    search_fields = ['name', 'owner']
+    ordering = ['owner', 'name']
+    fieldsets = [
+        ('Information', {'fields': ('name', 'owner', 'created')}),
+        ('JSON', {'fields': ('data',)})
+    ]
+
+    list_display = ('name', 'owner')
+
+
 admin.site.register(World, WorldAdmin)
+admin.site.register(Backup, BackupAdmin)

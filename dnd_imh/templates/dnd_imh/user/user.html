@@ -3,32 +3,48 @@
 {% block title %}{{ user_obj.username }} | D&D IMH{% endblock %}
 
 {% block body %}
-<div class="content">
-    <h1>{{ user_obj.username }}</h1>
+    <div class="content">
+        <h1>{{ user_obj.username }}</h1>
 
-    {% if user_obj.is_staff %}
-    <p>Admin</p>
-    {% endif %}
+        {% if user_obj.is_staff %}
+            <p>Admin</p>
+        {% endif %}
 
-    <h2>Worlds</h2>
-    {% if worlds%}
-    <table>
-        <tr>
-            <th>Name</th>
-            <th>Owner</th>
-        </tr>
-        {% for world in worlds %}
-        <tr>
-            <td><a href="{% url 'dnd_map:index' world.pk %}">{{ world.name }}</a></td>
-            <td>{{ world.owner }}</td>
-            {% if is_owner %}
-            <td><a href="{% url 'dnd_imh:edit_world' world.pk %}">edit</a></td>
-            {% endif %}
-        </tr>
-        {% endfor %}
-    </table>
-    {% else %}
-    <p>This user didn't create any world yet.</p>
-    {% endif %}
-</div>
+        <h2>Worlds</h2>
+        {% if worlds %}
+            <table>
+                {% for world in worlds %}
+                    <tr>
+                        <td><a href="{% url 'dnd_map:index' world.pk %}">{{ world.name }}</a></td>
+                        {% if is_owner %}
+                            <td><a href="{% url 'dnd_imh:edit_world' world.pk %}">edit</a></td>
+                            <td><a href="{% url 'dnd_imh:export_world' world.pk %}">backup</a></td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </table>
+        {% elif is_owner %}
+            <a href="{% url 'dnd_imh:create_world' %}">Create a world now!</a>
+        {% else %}
+            <p>This user didn't create any world yet.</p>
+        {% endif %}
+
+        {% if backups %}
+            <h2>Backups</h2>
+            <table>
+                <tr>
+                    <th>World name</th>
+                    <th>Created</th>
+                </tr>
+                {% for backup in backups %}
+                    <tr>
+                        <td>{{ backup.name }}</td>
+                        <td>{{ backup.created }}</td>
+                        <td><a href="#">↧</a></td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
+
+    </div>
 {% endblock %}

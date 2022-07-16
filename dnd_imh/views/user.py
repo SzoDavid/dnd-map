@@ -8,7 +8,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 
 from dnd_imh.forms import WorldForm, RegisterForm
-from dnd_imh.models import World
+from dnd_imh.models import World, Backup
 from dnd_map.models import Item
 
 
@@ -37,14 +37,13 @@ def register_user(request):
 
 def user(request, user_pk):
     user_obj = get_object_or_404(User, pk=user_pk, is_active=True)
-    worlds = World.objects.filter(owner=user_obj)
 
     context = {
         'user_obj': user_obj,
-        'worlds': worlds,
+        'worlds': World.objects.filter(owner=user_obj),
+        'backups': Backup.objects.filter(owner=user_obj),
         'is_owner': request.user == user_obj
     }
-
     return render(request, 'dnd_imh/user/user.html', context)
 
 

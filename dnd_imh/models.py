@@ -12,3 +12,13 @@ class World(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Backup(models.Model):
+    name = models.CharField(max_length=64)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    data = models.JSONField()
+    created = models.DateTimeField()
+
+    def __str__(self):
+        return self.name
