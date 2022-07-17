@@ -1,53 +1,66 @@
 {% extends "dnd_imh/base.html" %}
 {% load static %}
 
-{% block title %}{% if edit %}Edit {{ world.name }}{% else %}New world{%endif%} | D&D IMH{% endblock %}
+{% block title %}{% if edit %}Edit {{ world.name }}{% else %}New world{% endif %} | D&D IMH{% endblock %}
 
 {% block scripts %}
-<script>
-    window.onload = function () {
-        document.getElementById('id_owner').parentNode.parentNode.hidden = true
-    }
-    {% if edit %}
-    function remove() {
-        if (confirm('Are you sure you want to remove {{ world.name }}? Being deleted is really not healthy for worlds.')) {
-            window.location = "{% url 'dnd_imh:remove_world' world.pk %}"
+    <script>
+        window.onload = function () {
+            document.getElementById('id_owner').parentNode.parentNode.hidden = true
         }
-    }
-    {% endif %}
-</script>
+        {% if edit %}
+            function remove() {
+                if (confirm('Are you sure you want to remove {{ world.name }}? Being deleted is really not healthy for worlds.')) {
+                    window.location = "{% url 'dnd_imh:remove_world' world.pk %}"
+                }
+            }
+        {% endif %}
+    </script>
 {% endblock %}
 
 {% block body %}
-<div class="content">
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <fieldset>
-            <legend><h1>{% if edit %}Edit {{ world.name }}{% else %}New world{%endif%}</h1></legend>
-            {% if form.errors %}
-            {{ form.non_field_errors}}
-            {% endif %}
-            <table>
-                {% for field in form %}
-                <tr>
-                    <th>{{ field.label_tag }}</th>
-                    <td>{{ field }}</td>
-                    <td class="help">{{ field.help_text }}</td>
-                </tr>
-                {% endfor %}
-            </table>
-        </fieldset>
-        <label hidden>
-            <input name="return" value="{{ return }}" hidden>
+    <div class="content">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <fieldset>
+                <legend><h1>{% if edit %}Edit {{ world.name }}{% else %}New world{% endif %}</h1></legend>
+                {% if form.errors %}
+                    {{ form.non_field_errors }}
+                {% endif %}
+                <table>
+                    {% for field in form %}
+                        <tr>
+                            <th>{{ field.label_tag }}</th>
+                            <td>{{ field }}</td>
+                            <td class="help">{{ field.help_text }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </fieldset>
+            <label hidden>
+                <input name="return" value="{{ return }}" hidden>
+                {% if edit %}
+                    <input name="path" {% if has_map %} value="{{ world.map.path }}"  {% endif %} hidden>
+                {% endif %}
+            </label>
             {% if edit %}
-            <input name="path" {% if has_map %} value="{{ world.map.path }}"  {% endif %} hidden>
+                <button onclick="remove()">Remove</button>
             {% endif %}
-        </label>
-        {% if edit %}
-        <button onclick="remove()">Remove</button>
+            <input type="reset" value="Clear">
+            <input type="submit" value="Save">
+        </form>
+        {% if not edit %}
+            <h2>Create world from backups</h2>
+            <h3>Your backups</h3>
+            <ul>
+            {% for backup in backups %}
+                <li>
+                    <label><input id="backup_{{ backup.id }}" value="{{ backup.name }}"></label>
+                    {{ backup.created }}
+                    <button>Create</button>
+                </li>
+            {% endfor %}
+            </ul>
         {% endif %}
-        <input type="reset" value="Clear">
-        <input type="submit" value="Save">
-    </form>
-</div>
+    </div>
 {% endblock %}

@@ -51,6 +51,7 @@ def user(request, user_pk):
 def create_world(request):
     context = {
         'edit': False,
+        'backups': Backup.objects.filter(owner=request.user),
         'return': request.META.get('HTTP_REFERER', '/')}
 
     if request.method == 'POST':

@@ -18,7 +18,7 @@
                         <td><a href="{% url 'dnd_map:index' world.pk %}">{{ world.name }}</a></td>
                         {% if is_owner %}
                             <td><a href="{% url 'dnd_imh:edit_world' world.pk %}">edit</a></td>
-                            <td><a href="{% url 'dnd_imh:export_world' world.pk %}">backup</a></td>
+                            <td><a href="{% url 'dnd_imh:backup_world' world.pk %}">backup</a></td>
                         {% endif %}
                     </tr>
                 {% endfor %}

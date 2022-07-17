@@ -32,12 +32,12 @@
     <h1>
         {% if is_owner %}
         <a class="button" href="{% url 'dnd_imh:edit_world' world.pk %}">✎</a>
-        <a class="button" href="{% url 'dnd_imh:export_world' world.pk %}">↧</a>
+        <a class="button" href="{% url 'dnd_imh:backup_world' world.pk %}">↧</a>
         {% endif %}
         {{ world.name }}
     </h1>
     {% if world.description %}
-    <p><pre>{{ world.description }}</pre></p>
+    <pre>{{ world.description }}</pre>
     {% endif %}
 </div>
 {% if world.main_map %}

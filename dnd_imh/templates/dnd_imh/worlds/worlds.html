@@ -6,6 +6,8 @@
     <div class="content">
         <h1>Worlds</h1>
 
+        <a href="{% url 'dnd_imh:create_world' %}">Create a new world!</a>
+
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <label for="searchbar">Search: </label>
@@ -23,7 +25,7 @@
                     <td><a href="{% url 'dnd_imh:user' world.owner.pk %}">{{ world.owner }}</a></td>
                     {% if world.owner == user %}
                         <td><a href="{% url 'dnd_imh:edit_world' world.pk %}">edit</a></td>
-                        <td><a href="{% url 'dnd_imh:export_world' world.pk %}" title="Backups will be visible at your profile page">backup</a></td>
+                        <td><a href="{% url 'dnd_imh:backup_world' world.pk %}" title="Backups will be visible at your profile page">backup</a></td>
                     {% endif %}
                 </tr>
             {% endfor %}
